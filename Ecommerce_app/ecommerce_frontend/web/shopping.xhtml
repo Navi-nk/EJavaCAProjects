@@ -10,10 +10,12 @@
         <link rel="stylesheet" href="main.css"/>
     </h:head>
     <h:body>
+        <h:form>
         
        <p:layout fullPage="true">
    
         <p:layoutUnit position="east" size="300" header="Shopping cart" resizable="true" collapsible="true" effect="drop" >
+          <h:commandButton value="Check Out" action="checkout"></h:commandButton>
         </p:layoutUnit>
   
  
@@ -34,6 +36,7 @@
                                 <h:outputText value="Quantity:" />
                                 <h:outputText value="#{fruit.quantity}"/>
                             </h:panelGrid>
+                            <h:commandButton value="Add To Cart" action="checkout"></h:commandButton>
                         </h:panelGrid>
                    </p:panel>
                  </c:forEach>
@@ -41,6 +44,7 @@
          </p:layoutUnit>
  
     </p:layout>
+        </h:form>
     </h:body>
 </html>
 
