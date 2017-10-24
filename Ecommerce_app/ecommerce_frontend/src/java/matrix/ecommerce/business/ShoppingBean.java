@@ -1,4 +1,6 @@
-package matrix.ecommerce.web;
+package matrix.ecommerce.business;
+
+import javax.ejb.Stateless;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -10,6 +12,7 @@ package matrix.ecommerce.web;
  *
  * @author Sarita
  */
+@Stateless
 public class ShoppingBean {
     
 }

@@ -30,11 +30,11 @@ DROP TABLE IF EXISTS `fruitmart`.`customer` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `fruitmart`.`customer` (
-  `customer_id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL DEFAULT NULL,
   `address` VARCHAR(45) NULL DEFAULT NULL,
   `phone` VARCHAR(45) NULL DEFAULT NULL,
-  PRIMARY KEY (`customer_id`))
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -50,17 +50,42 @@ DROP TABLE IF EXISTS `fruitmart`.`fruit` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `fruitmart`.`fruit` (
-  `fruit_id` INT(11) NOT NULL,
-  `fruit_name` VARCHAR(45) NULL DEFAULT NULL,
-  `desc` VARCHAR(45) NULL DEFAULT NULL,
-  `image` VARCHAR(45) NULL DEFAULT NULL,
-  PRIMARY KEY (`fruit_id`))
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL DEFAULT NULL,
+  `quantity` int NULL DEFAULT NULL,
+  `price` float NULL DEFAULT NULL,
+  `description` VARCHAR(45) NULL DEFAULT NULL,
+  `image_uri` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 SHOW WARNINGS;
-CREATE UNIQUE INDEX `fruit_name_UNIQUE` ON `fruitmart`.`fruit` (`fruit_name` ASC);
-
+CREATE UNIQUE INDEX `fruit_name_UNIQUE` ON `fruitmart`.`fruit` (`name` ASC);
+-- -----------------------------------------------------
+-- inserts for fruits
+-- -----------------------------------------------------
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Acorns',50,1.5,'1 kg of Acorns','resources/images/acorn_squash.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Apples',40,2,'1 kg of Apples','resources/images/apple.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Bell Peppers',60,2.8,'1 kg of Bell Pepper','resources/images/bell_pepper.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Blue Berries',30,3.6,'1 kg of Blue Berry','resources/images/blueberries.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Broccoli',50,1.9,'1 kg of Broccoli','resources/images/broccoli.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Carrots',70,1.3,'1 kg of Carrots','resources/images/carrot.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Celery',40,2,'1 packet of Celery','resources/images/celery.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Chili Peppers',100,1.5,'1 packet of Chili peppers','resources/images/chili_pepper.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Corn',90,2.4,'1 packet of Corn','resources/images/corn.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Egg Plant',80,1.6,'1 kg of Egg Plant','resources/images/eggplant.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Lettuce',40,1.4,'1 kg of lettuce','resources/images/lettuce.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Mushrooms',80,3,'1 packet of Mushrooms','resources/images/mushroom.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Onions',70,3.6,'1 kg of Onions','resources/images/onion.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Potatos',90,2,'1 kg of Pototoes','resources/images/potato.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Pumpkins',40,3.4,'1 kg of Pumpkin','resources/images/pumpkin.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Radishes',60,2,'1 packet of Radishes','resources/images/radish.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Squash',70,3,'1 kg of squash','resources/images/squash.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Strawberries',30,3.6,'1 packet of Strawberries','resources/images/strawberry.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Peas',80,2.6,'1 packet of Peas','resources/images/sugar_snap.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Tomatoes',75,2.5,'1 kg of Tomotoes','resources/images/tomato.png');
+insert into fruitmart.fruit(`name`,`quantity`,`price`,`description`,`image_uri`) values ('Zucchinis',65,1.6,'1 kg of Zucchinis','resources/images/zucchini.png');
 SHOW WARNINGS;
 
 -- -----------------------------------------------------
@@ -85,7 +110,7 @@ DROP TABLE IF EXISTS `fruitmart`.`shopping_cart` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `fruitmart`.`shopping_cart` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `created_date` DATETIME NULL DEFAULT NULL,
   `customer_id` INT(11) NULL DEFAULT NULL,
   `comments` VARCHAR(45) NULL DEFAULT NULL,

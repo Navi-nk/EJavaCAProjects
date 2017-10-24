@@ -11,3 +11,5 @@ and open the template in the editor.
 .ui-layout-unit-header{
     background-color: red;
 }
+
+.panelClass .ui-panelgrid-column {width: 10%}
