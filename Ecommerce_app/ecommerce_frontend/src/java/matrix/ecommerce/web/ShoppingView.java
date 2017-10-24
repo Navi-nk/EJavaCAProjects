@@ -21,9 +21,9 @@ import matrix.ecommerce.model.Fruit;
  *
  * @author Sarita
  */
-@RequestScoped
+@SessionScoped
 @Named
-public class ShoppingView{
+public class ShoppingView implements Serializable{
     @EJB private FruitBean fruitBean;
     
     private List<Fruit> fruits;
