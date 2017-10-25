@@ -7,12 +7,15 @@ import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-
 import javax.inject.Named;
 import matrix.ecommerce.business.CustomerBean;
 import matrix.ecommerce.business.FruitBean;
+import matrix.ecommerce.business.ShoppingBean;
 import matrix.ecommerce.model.Customer;
 import matrix.ecommerce.model.Fruit;
+import matrix.ecommerce.model.FruitCart;
+import matrix.ecommerce.model.FruitCartPK;
+import matrix.ecommerce.model.ShoppingCart;
 /**
  *
  * @author Sarita Sethy
@@ -22,8 +25,9 @@ import matrix.ecommerce.model.Fruit;
 @Named
 public class CustomerView implements Serializable{
     @EJB private CustomerBean customerBean;
-    @Inject ShoppingView shoppingCart;
+    @Inject ShoppingView shoppingView;
     @EJB private FruitBean fruitBean;
+    @EJB private ShoppingBean shoppingBean;
     
     private Integer id;
     private String name;
@@ -72,6 +76,7 @@ public class CustomerView implements Serializable{
         this.phone = phone;
     }
     
+    
     public String getComments() {
         return comments;
     }
@@ -86,16 +91,23 @@ public class CustomerView implements Serializable{
         customer.setName(name);
         customer.setAddress(address);
         customer.setPhone(phone);
-       // customer.setComments(comments);
         customerBean.addCustomer(customer);
-        List<Fruit> fruits = shoppingCart.getFruits();
+        
+        List<Fruit> fruits = shoppingView.getFruits();
+         ShoppingCart cart =  new ShoppingCart();
         if(fruits.size()>0)
         {
-            
+            cart.setComments(comments);
+            cart.setCustomerId(customer.getId());
+            shoppingBean.addCart(cart);
         }
+        
         for(Fruit fruit:fruits)
         {
-            //em.per
+            FruitCartPK fruitCartPK = new FruitCartPK(cart.getId(),fruit.getId().intValue());
+            FruitCart fruitCart = new FruitCart();
+            fruitCart.setFruitCartPK(fruitCartPK);
+            shoppingBean.addFruitCart(fruitCart);
         }
         return ("thankyou");
     }

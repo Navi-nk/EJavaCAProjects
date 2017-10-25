@@ -3,6 +3,7 @@ package matrix.ecommerce.business;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import matrix.ecommerce.model.FruitCart;
 import matrix.ecommerce.model.ShoppingCart;
 /**
  *
@@ -15,5 +16,9 @@ public class ShoppingBean {
     public void addCart(ShoppingCart cart)  
     {
         em.persist(cart);
+    }
+    public void addFruitCart(FruitCart fruitCart)  
+    {
+        em.persist(fruitCart);
     }
 }

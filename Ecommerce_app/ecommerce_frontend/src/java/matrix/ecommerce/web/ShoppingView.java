@@ -26,10 +26,12 @@ public class ShoppingView implements Serializable{
     
     private List<Fruit> fruits;
 
+   
+
     @PostConstruct
     private void init() {
     populateView(); }
-
+    
     public List<Fruit> getFruits() {
         return fruits;
     }
