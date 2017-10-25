@@ -1,18 +1,24 @@
 package matrix.ecommerce.business;
 
 import javax.ejb.Stateless;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import matrix.ecommerce.model.FruitCart;
+import matrix.ecommerce.model.ShoppingCart;
 /**
  *
  * @author Sarita
  */
 @Stateless
 public class ShoppingBean {
-    
+    @PersistenceContext private EntityManager em;
+   
+    public void addCart(ShoppingCart cart)  
+    {
+        em.persist(cart);
+    }
+    public void addFruitCart(FruitCart fruitCart)  
+    {
+        em.persist(fruitCart);
+    }
 }

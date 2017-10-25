@@ -19,11 +19,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "fruit_cart")
-@XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "FruitCart.findAll", query = "SELECT f FROM FruitCart f")
-    , @NamedQuery(name = "FruitCart.findByFruitId", query = "SELECT f FROM FruitCart f WHERE f.fruitCartPK.fruitId = :fruitId")
-    , @NamedQuery(name = "FruitCart.findByShoppingcartId", query = "SELECT f FROM FruitCart f WHERE f.fruitCartPK.shoppingcartId = :shoppingcartId")})
 public class FruitCart implements Serializable {
 
     private static final long serialVersionUID = 1L;

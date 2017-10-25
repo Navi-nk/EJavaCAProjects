@@ -16,6 +16,7 @@
    
         <p:layoutUnit position="east" size="300" header="Shopping cart" resizable="true" collapsible="true" closable="true" effect="drop">
              <h:form>
+                 
           <h:commandButton value="Check Out" action="checkout"></h:commandButton>
           </h:form>
         </p:layoutUnit>
@@ -29,31 +30,25 @@
                         <h:panelGrid columns="2" >
                             <p:graphicImage value="#{fruit.image_uri}" />
                             <h:panelGrid columns="2" cellpadding="5" styleClass="panelClass">
+                                <f:param name="productId" value="#{fruit.id}"></f:param>
                                 <h:outputText value="Name:" />
                                 <h:outputText value="#{fruit.name}" />
                                 <h:outputText value="Description:" />
                                 <h:outputText value="#{fruit.description}"/>
                                 <h:outputText value="Price:" />
                                 <h:outputText value="#{fruit.price} SGD"/>
-                                <h:outputText value="Quantity:" />
-                                <h:outputText value="#{fruit.quantity}"/>
                             </h:panelGrid>
                              <h:form>
                             <p:commandButton value="Add To Cart" onclick="PF('dlg').show();"></p:commandButton>
                             <p:dialog header="Enter Quantity" widgetVar="dlg" resizable="false">
                                 <h:panelGrid columns="2" cellpadding="5">
                                     <h:outputLabel value="Name:" />
-                                    <h:outputText value="#{fruit.name}" />
+                                    <h:outputText value="#{shoppingView.selectedFruit.name}" />
  
                                     <h:outputLabel value="Quantity:" />
-                                    <p:inputText id="username" value="#{userLoginView.username}" required="true" label="username" />/>
- 
-            <f:facet name="footer">
-                <p:commandButton value="Login" update="growl" actionListener="#{userLoginView.login}"
-                                 oncomplete="handleLoginRequest(xhr, status, args)" />
-            </f:facet>  
-        </h:panelGrid>
-    </p:dialog>
+                                    <p:inputText id="quantity" value="" required="true" label="Quantity:" />
+                                </h:panelGrid>
+                            </p:dialog>
                             </h:form>
                         </h:panelGrid>
                    </p:panel>
