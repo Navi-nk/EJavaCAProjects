@@ -10,17 +10,19 @@
         <link rel="stylesheet" href="main.css"/>
     </h:head>
     <h:body>
-        <h:form>
+
         
        <p:layout fullPage="true">
    
-        <p:layoutUnit position="east" size="300" header="Shopping cart" resizable="true" collapsible="true" effect="drop" >
+        <p:layoutUnit position="east" size="300" header="Shopping cart" resizable="true" collapsible="true" closable="true" effect="drop">
+             <h:form>
           <h:commandButton value="Check Out" action="checkout"></h:commandButton>
+          </h:form>
         </p:layoutUnit>
   
  
        <p:layoutUnit position="center" header="Fruits Catalog">
-           
+          
             <h:panelGrid columns="3" >
                 <c:forEach items="#{shoppingView.fruits}" var="fruit">
                      <p:panel>
@@ -36,15 +38,31 @@
                                 <h:outputText value="Quantity:" />
                                 <h:outputText value="#{fruit.quantity}"/>
                             </h:panelGrid>
-                            <h:commandButton value="Add To Cart" action="checkout"></h:commandButton>
+                             <h:form>
+                            <p:commandButton value="Add To Cart" onclick="PF('dlg').show();"></p:commandButton>
+                            <p:dialog header="Enter Quantity" widgetVar="dlg" resizable="false">
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <h:outputLabel value="Name:" />
+                                    <h:outputText value="#{fruit.name}" />
+ 
+                                    <h:outputLabel value="Quantity:" />
+                                    <p:inputText id="username" value="#{userLoginView.username}" required="true" label="username" />/>
+ 
+            <f:facet name="footer">
+                <p:commandButton value="Login" update="growl" actionListener="#{userLoginView.login}"
+                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+            </f:facet>  
+        </h:panelGrid>
+    </p:dialog>
+                            </h:form>
                         </h:panelGrid>
                    </p:panel>
                  </c:forEach>
             </h:panelGrid>
+           
          </p:layoutUnit>
  
     </p:layout>
-        </h:form>
     </h:body>
 </html>
 
