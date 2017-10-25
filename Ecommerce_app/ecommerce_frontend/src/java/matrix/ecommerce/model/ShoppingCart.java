@@ -26,16 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "shopping_cart")
-@XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "ShoppingCart.findAll", query = "SELECT s FROM ShoppingCart s")
-    , @NamedQuery(name = "ShoppingCart.findById", query = "SELECT s FROM ShoppingCart s WHERE s.id = :id")
-    , @NamedQuery(name = "ShoppingCart.findByCreatedDate", query = "SELECT s FROM ShoppingCart s WHERE s.createdDate = :createdDate")
-    , @NamedQuery(name = "ShoppingCart.findByCustomerId", query = "SELECT s FROM ShoppingCart s WHERE s.customerId = :customerId")
-    , @NamedQuery(name = "ShoppingCart.findByComments", query = "SELECT s FROM ShoppingCart s WHERE s.comments = :comments")})
+
 public class ShoppingCart implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
