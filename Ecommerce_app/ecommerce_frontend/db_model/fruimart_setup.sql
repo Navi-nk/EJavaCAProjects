@@ -90,19 +90,19 @@ insert into fruitmart.fruit(`name`,`price`,`description`,`image_uri`) values ('Z
 SHOW WARNINGS;
 
 -- -----------------------------------------------------
--- Table `fruitmart`.`orders`
+-- Table `fruitmart`.`order`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fruitmart`.`orders` ;
+DROP TABLE IF EXISTS `fruitmart`.`order` ;
 
 SHOW WARNINGS;
-CREATE TABLE IF NOT EXISTS `fruitmart`.`orders` (
+CREATE TABLE IF NOT EXISTS `fruitmart`.`order` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `created_date` DATETIME NOT NULL,
   `comments` VARCHAR(45) NULL DEFAULT NULL,
-  `total_cost` INT(5) NOT NULL,
+  `total_cost` FLOAT NOT NULL,
   `customer_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_orders_customer1`
+  CONSTRAINT `fk_order_customer1`
     FOREIGN KEY (`customer_id`)
     REFERENCES `fruitmart`.`customer` (`id`)
     ON DELETE NO ACTION
@@ -111,40 +111,41 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 SHOW WARNINGS;
-CREATE INDEX `fk_orders_customer1_idx` ON `fruitmart`.`orders` (`customer_id` ASC);
+CREATE INDEX `fk_order_customer1_idx` ON `fruitmart`.`order` (`customer_id` ASC);
 
 SHOW WARNINGS;
 
 -- -----------------------------------------------------
--- Table `fruitmart`.`shopping_cart`
+-- Table `fruitmart`.`shopping_cart_items`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fruitmart`.`shopping_cart` ;
+DROP TABLE IF EXISTS `fruitmart`.`shopping_cart_items` ;
 
 SHOW WARNINGS;
-CREATE TABLE IF NOT EXISTS `fruitmart`.`shopping_cart` (
+CREATE TABLE IF NOT EXISTS `fruitmart`.`shopping_cart_items` (
+  `id` INT(11) NOT NULL,
   `selected_quantity` INT NOT NULL,
-  `cost` INT(5) NOT NULL,
+  `cost` FLOAT NOT NULL,
+  `order_id` INT(11) NOT NULL,
   `fruit_id` INT(11) NOT NULL,
-  `orders_id` INT(11) NOT NULL,
-  PRIMARY KEY (`fruit_id`, `orders_id`),
-  CONSTRAINT `fk_shopping_cart_fruit1`
-    FOREIGN KEY (`fruit_id`)
-    REFERENCES `fruitmart`.`fruit` (`id`)
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_shopping_cart_orders1`
+    FOREIGN KEY (`order_id`)
+    REFERENCES `fruitmart`.`order` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_shopping_cart_orders1`
-    FOREIGN KEY (`orders_id`)
-    REFERENCES `fruitmart`.`orders` (`id`)
+  CONSTRAINT `fk_shopping_cart_items_fruit1`
+    FOREIGN KEY (`fruit_id`)
+    REFERENCES `fruitmart`.`fruit` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 SHOW WARNINGS;
-CREATE INDEX `fk_shopping_cart_fruit1_idx` ON `fruitmart`.`shopping_cart` (`fruit_id` ASC);
+CREATE INDEX `fk_shopping_cart_items_fruit1_idx` ON `fruitmart`.`shopping_cart_items` (`fruit_id` ASC);
 
 SHOW WARNINGS;
-CREATE INDEX `fk_shopping_cart_orders1_idx` ON `fruitmart`.`shopping_cart` (`orders_id` ASC);
+CREATE INDEX `fk_shopping_cart_items_order1_idx` ON `fruitmart`.`shopping_cart_items` (`order_id` ASC);
 
 SHOW WARNINGS;
 

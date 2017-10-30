@@ -12,4 +12,6 @@ and open the template in the editor.
     background-color: red;
 }
 
-.panelClass .ui-panelgrid-column {width: 10%}
+.panelClass .ui-panelgrid-column {
+    width: 100%
+}

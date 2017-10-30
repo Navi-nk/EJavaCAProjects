@@ -15,58 +15,58 @@ import javax.persistence.Embeddable;
  * @author Sarita
  */
 @Embeddable
-public class FruitCartPK implements Serializable {
+public class ShoppingCartPK implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @Basic(optional = false)
     @Column(name = "fruit_id")
     private int fruitId;
     @Basic(optional = false)
-    @Column(name = "shoppingcart_id")
-    private int shoppingcartId;
+    @Column(name = "order_id")
+    private int orderId;
 
-    public FruitCartPK() {
+    public ShoppingCartPK() {
     }
 
-    public FruitCartPK(int fruitId, int shoppingcartId) {
+    public ShoppingCartPK(int fruitId, int orderId) {
         this.fruitId = fruitId;
-        this.shoppingcartId = shoppingcartId;
+        this.orderId = orderId;
     }
 
     public int getFruitId() {
         return fruitId;
     }
-
     public void setFruitId(int fruitId) {
         this.fruitId = fruitId;
     }
 
-    public int getShoppingcartId() {
-        return shoppingcartId;
+    public int getOrderId() {
+        return orderId;
     }
-
-    public void setShoppingcartId(int shoppingcartId) {
-        this.shoppingcartId = shoppingcartId;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) fruitId;
-        hash += (int) shoppingcartId;
+        hash += (int) orderId;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof FruitCartPK)) {
+        if (!(object instanceof ShoppingCartPK)) {
             return false;
         }
-        FruitCartPK other = (FruitCartPK) object;
+        ShoppingCartPK other = (ShoppingCartPK) object;
         if (this.fruitId != other.fruitId) {
             return false;
         }
-        if (this.shoppingcartId != other.shoppingcartId) {
+        if (this.orderId != other.orderId) {
             return false;
         }
         return true;
@@ -74,7 +74,7 @@ public class FruitCartPK implements Serializable {
 
     @Override
     public String toString() {
-        return "matrix.ecommerce.business.FruitCartPK[ fruitId=" + fruitId + ", shoppingcartId=" + shoppingcartId + " ]";
+        return "matrix.ecommerce.business.FruitCartPK[ fruitId=" + fruitId + ", shoppingcartId=" + orderId + " ]";
     }
     
 }

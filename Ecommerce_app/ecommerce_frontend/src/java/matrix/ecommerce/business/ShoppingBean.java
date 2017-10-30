@@ -3,8 +3,8 @@ package matrix.ecommerce.business;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import matrix.ecommerce.model.FruitCart;
-import matrix.ecommerce.model.ShoppingCart;
+import matrix.ecommerce.model.ShoppingCartItem;
+import matrix.ecommerce.model.Order;
 /**
  *
  * @author Sarita
@@ -13,11 +13,11 @@ import matrix.ecommerce.model.ShoppingCart;
 public class ShoppingBean {
     @PersistenceContext private EntityManager em;
    
-    public void addCart(ShoppingCart cart)  
+    public void addCart(Order cart)  
     {
         em.persist(cart);
     }
-    public void addFruitCart(FruitCart fruitCart)  
+    public void addFruitCart(ShoppingCartItem fruitCart)  
     {
         em.persist(fruitCart);
     }

@@ -23,40 +23,34 @@
   
  
        <p:layoutUnit position="center" header="Fruits Catalog">
-          
+          <h:form>
             <h:panelGrid columns="3" >
                 <c:forEach items="#{shoppingView.fruits}" var="fruit">
                      <p:panel>
                         <h:panelGrid columns="2" >
                             <p:graphicImage value="#{fruit.image_uri}" />
-                            <h:panelGrid columns="2" cellpadding="5" styleClass="panelClass">
-                                <f:param name="productId" value="#{fruit.id}"></f:param>
+                            <h:panelGrid columns="2" cellpadding="5" >
+                               
                                 <h:outputText value="Name:" />
                                 <h:outputText value="#{fruit.name}" />
                                 <h:outputText value="Description:" />
                                 <h:outputText value="#{fruit.description}"/>
                                 <h:outputText value="Price:" />
                                 <h:outputText value="#{fruit.price} SGD"/>
-                            </h:panelGrid>
-                             <h:form>
-                            <p:commandButton value="Add To Cart" onclick="PF('dlg').show();"></p:commandButton>
-                            <p:dialog header="Enter Quantity" widgetVar="dlg" resizable="false">
-                                <h:panelGrid columns="2" cellpadding="5">
-                                    <h:outputLabel value="Name:" />
-                                    <h:outputText value="#{shoppingView.selectedFruit.name}" />
- 
-                                    <h:outputLabel value="Quantity:" />
-                                    <p:inputText id="quantity" value="" required="true" label="Quantity:" />
-                                </h:panelGrid>
-                            </p:dialog>
-                            </h:form>
+                            
+                            </h:panelGrid> 
+                            <p:commandButton value="Add To Cart" actionListener="#{shoppingView.fruitSelected()}">
+                                <f:param name="fruit_id" value="#{fruit.id}" />
+                                <p:ajax event="dialogReturn" listener="#{shoppingView.fruitAddedTocart()}"  />
+                            </p:commandButton>
+                            
                         </h:panelGrid>
                    </p:panel>
                  </c:forEach>
             </h:panelGrid>
-           
+            </h:form>
          </p:layoutUnit>
- 
+
     </p:layout>
     </h:body>
 </html>

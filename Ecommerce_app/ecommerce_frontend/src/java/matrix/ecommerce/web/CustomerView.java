@@ -13,9 +13,9 @@ import matrix.ecommerce.business.FruitBean;
 import matrix.ecommerce.business.ShoppingBean;
 import matrix.ecommerce.model.Customer;
 import matrix.ecommerce.model.Fruit;
-import matrix.ecommerce.model.FruitCart;
-import matrix.ecommerce.model.FruitCartPK;
-import matrix.ecommerce.model.ShoppingCart;
+import matrix.ecommerce.model.ShoppingCartItem;
+import matrix.ecommerce.model.ShoppingCartPK;
+import matrix.ecommerce.model.Order;
 /**
  *
  * @author Sarita Sethy
@@ -94,19 +94,19 @@ public class CustomerView implements Serializable{
         customerBean.addCustomer(customer);
         
         List<Fruit> fruits = shoppingView.getFruits();
-         ShoppingCart cart =  new ShoppingCart();
+         Order cart =  new Order();
         if(fruits.size()>0)
         {
             cart.setComments(comments);
-            cart.setCustomerId(customer.getId());
+         //   cart.setCustomerId(customer.getId());
             shoppingBean.addCart(cart);
         }
         
         for(Fruit fruit:fruits)
         {
-            FruitCartPK fruitCartPK = new FruitCartPK(cart.getId(),fruit.getId().intValue());
-            FruitCart fruitCart = new FruitCart();
-            fruitCart.setFruitCartPK(fruitCartPK);
+            ShoppingCartPK fruitCartPK = new ShoppingCartPK(cart.getId(),fruit.getId().intValue());
+            ShoppingCartItem fruitCart = new ShoppingCartItem();
+           // fruitCart.setFruitCartPK(fruitCartPK);
             shoppingBean.addFruitCart(fruitCart);
         }
         return ("thankyou");

@@ -7,54 +7,59 @@ package matrix.ecommerce.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
+import java.util.List;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sarita
  */
 @Entity
-@Table(name = "shopping_cart")
-
-public class ShoppingCart implements Serializable {
+@Table(name = "order")
+public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
+    @Id @GeneratedValue(strategy=IDENTITY)
     private Integer id;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-    @Column(name = "customer_id")
-    private Integer customerId;
+    @Column(name = "total_cost")
+    private float totalCost;
     @Column(name = "comments")
     private String comments;
-
-    public ShoppingCart() {
+    
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")	
+    private Customer customer;
+    
+    @ElementCollection
+    @CollectionTable(joinColumns=@JoinColumn(name="order_id"))
+    private List<ShoppingCartItem> shoppingCartItems;
+    
+    public Order() {
     }
 
-    public ShoppingCart(Integer id) {
+    public Order(Integer id) {
         this.id = id;
     }
 
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -62,26 +67,40 @@ public class ShoppingCart implements Serializable {
     public Date getCreatedDate() {
         return createdDate;
     }
-
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
 
     public String getComments() {
         return comments;
     }
-
     public void setComments(String comments) {
         this.comments = comments;
     }
+
+    public float getTotalCost() {
+        return totalCost;
+    }
+    public void setTotalCost(float totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public List<ShoppingCartItem> getShoppingCartItems() {
+        return shoppingCartItems;
+    }
+    public void setShoppingCartItems(List<ShoppingCartItem> shoppingCartItems) {
+        this.shoppingCartItems = shoppingCartItems;
+    }
+    
+    
 
     @Override
     public int hashCode() {
@@ -93,10 +112,10 @@ public class ShoppingCart implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ShoppingCart)) {
+        if (!(object instanceof Order)) {
             return false;
         }
-        ShoppingCart other = (ShoppingCart) object;
+        Order other = (Order) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
