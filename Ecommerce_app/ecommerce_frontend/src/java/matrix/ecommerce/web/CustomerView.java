@@ -25,7 +25,7 @@ import matrix.ecommerce.model.Order;
  * @author Sarita Sethy
  */
 
-@RequestScoped
+@ViewScoped
 @Named
 public class CustomerView implements Serializable{
     @EJB private CustomerBean customerBean;
@@ -143,7 +143,6 @@ public class CustomerView implements Serializable{
     } 
     
     public String continueShopping(){
-        System.out.println("Inside cust");
         return ("shopping?faces-redirect=true");
     }
 }
