@@ -158,5 +158,9 @@ public class ShoppingView implements Serializable{
        selectedFruit = null;
        System.out.println("size of cart "+ shoppingCartItems.size());       
    }
+   
+   public String checkOut(){
+       return("thankyou");
+   }
     
 }

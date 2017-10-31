@@ -6,8 +6,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 import matrix.ecommerce.business.CustomerBean;
 import matrix.ecommerce.business.FruitBean;
 import matrix.ecommerce.business.ShoppingBean;
@@ -119,6 +122,16 @@ public class CustomerView implements Serializable{
         return false;
         return true;
     }
+    
+    public String endSession(){
+        
+        HttpSession sess = (HttpSession) FacesContext.getCurrentInstance().
+                getExternalContext().getSession(false);
+
+		sess.invalidate();
+                
+                return ("welcome");
+    } 
     
     
 }

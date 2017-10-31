@@ -60,7 +60,7 @@
                          <h:commandButton value="Remove" action="#{shoppingView.removeItem(items.fruit)}" style="margin-left: 35%; margin-top: 2%"/>
                      </p:panel>
                  </c:forEach>
-                 <h:commandButton value="Check Out" id="checkout" action="checkout" rendered="#{shoppingView.shoppingCartItems.size() > 0}" style="margin-left: 35%; margin-top: 2%"/>
+                 <h:commandButton value="Check Out" id="checkout" action="#{shoppingView.checkOut()}" rendered="#{shoppingView.shoppingCartItems.size() > 0}" style="margin-left: 35%; margin-top: 2%"/>
           </h:form>
         </p:layoutUnit>
     </p:layout>
