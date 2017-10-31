@@ -5,14 +5,15 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>ECommerce Application</title>
-        <link rel="stylesheet" href="main.css"/>
+        <link rel="stylesheet" href="main.css"/> 
+       
     </h:head>
-    <h:body>
+    <h:body styleClass="welcome">
         <h:form>
             <h1 align="center">Welcome to Fruit Mart</h1>
             <p:separator />
             <h2 align="center">Your new experience for shopping fruit online!</h2>
-            <h:commandButton value="Buy Fruits" id="BuyFruits" action="shopping" styleClass="ui-priority-primary" style="margin-left: 47%" />
+            <p:commandButton value="Buy Fruits" id="BuyFruits" action="shopping" styleClass="ui-priority-primary" style="margin-left: 47%" />
         </h:form>
     </h:body>
 </html>

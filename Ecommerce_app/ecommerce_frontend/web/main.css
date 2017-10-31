@@ -11,3 +11,10 @@ and open the template in the editor.
 .ui-layout-unit-header{
     background-color: red;
 }
+ .welcome{
+            background-image:url(/ecommerce_frontend/resources/images/background.jpg);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: initial;
+                      
+        }
