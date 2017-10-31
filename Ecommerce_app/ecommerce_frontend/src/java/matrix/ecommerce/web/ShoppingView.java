@@ -160,7 +160,8 @@ public class ShoppingView implements Serializable{
    }
    
    public String checkOut(){
-       return("thankyou");
+       FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("shoppingCart", shoppingCartItems);
+       return("checkout?faces-redirect=true");
    }
     
 }

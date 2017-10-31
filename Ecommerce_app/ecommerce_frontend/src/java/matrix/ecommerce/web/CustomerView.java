@@ -1,13 +1,14 @@
 package matrix.ecommerce.web;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
@@ -31,6 +32,7 @@ public class CustomerView implements Serializable{
     @Inject ShoppingView shoppingView;
     @EJB private FruitBean fruitBean;
     @EJB private ShoppingBean shoppingBean;
+    private List<ShoppingCartItem> shoppingCartItems = new LinkedList<>();  
     
     private Integer id;
     private String name;
@@ -40,6 +42,13 @@ public class CustomerView implements Serializable{
   
     @PostConstruct
 	private void init() {
+            shoppingCartItems = (List<ShoppingCartItem>) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("shoppingCart");
+            if(shoppingCartItems != null){
+            for(ShoppingCartItem cItem : shoppingCartItems){
+            System.out.println(cItem.getFruit().getName());
+            }
+        }
+            
 		System.out.println(">> Creating Customer");
 	}
 
@@ -130,8 +139,11 @@ public class CustomerView implements Serializable{
 
 		sess.invalidate();
                 
-                return ("welcome");
+                return ("welcome?faces-redirect=true");
     } 
     
-    
+    public String continueShopping(){
+        System.out.println("Inside cust");
+        return ("shopping?faces-redirect=true");
+    }
 }

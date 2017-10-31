@@ -47,9 +47,14 @@
     <p:message for="comments" />    
        
     <p:commandButton value="Register" action="#{customerView.addCustomer()}" ajax="false"></p:commandButton>
+    
    </h:panelGrid>
   </p:fieldset>
- 
+     
  </h:form>
+ <h:form>
+     <p:commandButton value="Continue Shopping" action="#{customerView.continueShopping()}" ajax="false" styleClass="ui-priority-primary" style="margin-left: 45%" />
+ </h:form>
+ 
 </h:body> 
 </html>
