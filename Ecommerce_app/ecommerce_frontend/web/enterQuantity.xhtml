@@ -15,16 +15,22 @@ and open the template in the editor.
         <link rel="stylesheet" href="main.css"/>
     </h:head>
     <h:body>
-        <h:form>
-            <h:panelGrid columns="2" cellpadding="5" >
-                <h:outputLabel value="Name:" />
+        <h:form id="qform">
+            <h:panelGrid columns="2" cellpadding="5">
+                <p:outputLabel value="Name:" />
                 <h:outputText value="#{shoppingView.selectedFruit.name}" />
-                <h:outputLabel value="Quantity:" />
-
-                <p:inputText id="quantity" value="#{shoppingView.newQuantity}" required="true" label="Quantity:" />
-                <p:commandButton value="submit" actionListener="#{shoppingView.addToCart()}">
-                </p:commandButton>
-            </h:panelGrid>          
+                <p:outputLabel value="Quantity:" />
+                <h:panelGrid columns="2" cellpadding="5">
+                <p:inputText id="quantity" value="#{shoppingView.newQuantity}" 
+                             required="true" 
+                             requiredMessage="Quantity is required" 
+                             validatorMessage="Quantity should be between 1 and 100">
+                    <f:validateLongRange minimum="1" maximum="100" />
+                </p:inputText>
+                <p:message for="quantity" id="qmsg"/>
+                </h:panelGrid> 
+           </h:panelGrid>       
+           <p:commandButton value="submit" actionListener="#{shoppingView.closeDialog()}" update="qmsg" style="margin-left: 40%"/> 
          </h:form>
     </h:body>
 </html>

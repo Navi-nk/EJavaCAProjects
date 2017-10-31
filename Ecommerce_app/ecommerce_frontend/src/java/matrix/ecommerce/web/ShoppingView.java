@@ -8,14 +8,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import matrix.ecommerce.business.FruitBean;
 import matrix.ecommerce.model.Fruit;
 import matrix.ecommerce.model.ShoppingCartItem;
-import matrix.ecommerce.model.ShoppingCartItem_;
 import org.primefaces.context.RequestContext;
-import static org.primefaces.context.RequestContext.getCurrentInstance;
 
 
 /*
@@ -26,7 +25,7 @@ import static org.primefaces.context.RequestContext.getCurrentInstance;
 
 /**
  *
- * @author Sarita
+ * @author Navi
  */
 @SessionScoped
 @Named
@@ -83,8 +82,7 @@ public class ShoppingView implements Serializable{
     }
     
     
-    
-    public void storeSelectedFruit(Fruit selectedFruit) { 
+    public void storeSelectedFruit() { 
         for(ShoppingCartItem cItem : shoppingCartItems){
             System.out.println(cItem.getFruit().getName() +" "+selectedFruit.getName());
             if((cItem.getFruit()).equals(selectedFruit)){
@@ -98,14 +96,19 @@ public class ShoppingView implements Serializable{
         shoppingCartItems.add(cartItem);
     }
 
-    public void storeSelectedQuantity(Integer selectedQuantity) {
+    public void storeSelectedQuantity() {
         System.out.println("inside increase");
-        cartItem.increaseQuantity(selectedQuantity);  
+        cartItem.increaseQuantity(newQuantity);  
         System.out.println(cartItem.getSelectedQuantity());
+        
     }
     
     public void calculateCost(){
-        
+        System.out.println("inside cost");
+        cartItem.setCost(
+        (cartItem.getSelectedQuantity() * selectedFruit.getPrice())
+        );
+        System.out.println(cartItem.getCost());
     }
 
    public void populateView(){
@@ -121,25 +124,39 @@ public class ShoppingView implements Serializable{
            if (String.valueOf(f.getId()).equals(id))
                    setSelectedFruit(f);
            });
-      System.out.println("name:"+selectedFruit.getName());
-      
+       System.out.println("name:"+selectedFruit.getName());
        Map<String,Object> options = new HashMap<String, Object>();
-        options.put("resizable", false);
-        
-        RequestContext.getCurrentInstance().openDialog("enterQuantity", options, null);
+       options.put("resizable", false);
+       options.put("contentHeight", 300);
+       options.put("height", 150);  
+       options.put("width",650);
+       RequestContext.getCurrentInstance().openDialog("enterQuantity", options, null);
    }
    
-   public void addToCart(){
+   public void removeItem(Fruit f){
+       System.out.println("matrix.ecommerce.web.ShoppingView.removeItem()");
+       for(ShoppingCartItem cItem : shoppingCartItems){
+            System.out.println(cItem.getFruit().getName());
+            if((cItem.getFruit()).equals(f)){
+                shoppingCartItems.remove(cItem);
+                return;
+            }
+        }
+   }
+   
+   public void closeDialog(){
        System.out.println("matrix.ecommerce.web.ShoppingView.addToCart()");
        RequestContext.getCurrentInstance().closeDialog(null);
-       storeSelectedFruit(selectedFruit);
-       storeSelectedQuantity(newQuantity);
-       calculateCost();
-                
    }
    
    public void fruitAddedTocart(){
-              
+       storeSelectedFruit();
+       storeSelectedQuantity();
+       calculateCost();
+       cartItem = new ShoppingCartItem(Float.valueOf(0), 0);
+       newQuantity = null;
+       selectedFruit = null;
+       System.out.println("size of cart "+ shoppingCartItems.size());       
    }
     
 }
