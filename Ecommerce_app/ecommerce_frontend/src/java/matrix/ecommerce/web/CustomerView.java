@@ -1,14 +1,12 @@
 package matrix.ecommerce.web;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -19,6 +17,9 @@ import javax.jms.JMSException;
 import javax.jms.JMSProducer;
 import javax.jms.Queue;
 import javax.jms.TextMessage;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.http.HttpSession;
 import matrix.ecommerce.business.CustomerBean;
 import matrix.ecommerce.business.FruitBean;
@@ -153,14 +154,21 @@ public class CustomerView implements Serializable{
     public String endSession(){
         
         try (JMSContext jmsCtx = connectionFactory.createContext()) {
-			JMSProducer producer = jmsCtx.createProducer();
-			TextMessage txtMsg = jmsCtx.createTextMessage();
-			txtMsg.setText(new Date() + ">> " + "Test message");
-			producer.send(warehouseQueue, txtMsg);
-
-		} catch (JMSException ex) {
-			ex.printStackTrace();
-		}
+            JMSProducer producer = jmsCtx.createProducer();
+            TextMessage txtMsg = jmsCtx.createTextMessage();
+            //txtMsg.setText(new Date() + ">> " + shoppingCartItems.get(0).getFruit().getName());
+            String msg = createJSONMessage();
+            if(null != msg){
+                txtMsg.setText(msg);
+                producer.send(warehouseQueue, txtMsg);
+            }
+            else{
+                System.out.println("Cannot send message - order details is not found");
+                return null;
+            }
+        } catch (JMSException ex) {
+            ex.printStackTrace();
+        }
         
         HttpSession sess = (HttpSession) FacesContext.getCurrentInstance().
                 getExternalContext().getSession(false);
@@ -172,5 +180,29 @@ public class CustomerView implements Serializable{
     
     public String continueShopping(){
         return ("shopping?faces-redirect=true");
+    }
+    
+    public String createJSONMessage(){
+        if(shoppingCartItems != null){
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            //objectBuilder.add("name",name)
+            //         .add("address", address)
+            //         .add("comment", comments);
+            objectBuilder.add("name","naval")
+                        .add("address", "holland drive")
+                        .add("comment", "testing");
+        
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        
+            shoppingCartItems.forEach( items -> {
+                arrayBuilder.add(Json.createObjectBuilder()
+                .add("item", items.getFruit().getName())
+                .add("quantity", items.getSelectedQuantity()));
+            });
+            
+            objectBuilder.add("cart", arrayBuilder.build());
+            return objectBuilder.build().toString();
+        }
+        return null;
     }
 }
