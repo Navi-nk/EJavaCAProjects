@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>E-Commerce Application - Fruit Mart</title>
+        <link rel="stylesheet" href="main.css"/>
+    </h:head>
+    <h:body styleClass="welcome">
+       <h:form>
+           <h1 align="center">Thank You for the Purchase at Fruit Mart</h1>
+            <p:separator />
+            <h2 align="center">Your order shall be dispatched shortly!</h2>
+            <p:commandButton value="Back to Home" id="BackHome" action="#{customerView.endSession()}" styleClass="ui-priority-primary" style="margin-left: 45%" />
+        </h:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,60 @@
+<html xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+
+</h:head> 
+<h:body> 
+ <h2>Check Out</h2>
+ <p:separator />
+ <h:form>
+  <p:fieldset legend="Registration Form" widgetVar="regWidget" style="width: 600px;">
+   <h:panelGrid columns="3" width="700" border="0">
+    
+    <h:outputLabel value="Name" />
+    <p:inputText value="#{customerView.name}" 
+       id="name"
+        required="true" 
+        requiredMessage="Name is required">
+     </p:inputText>
+    <p:message for="name"/>
+    
+    
+    <h:outputLabel value="Address" />
+    <p:inputText value="#{customerView.address}"
+       id="address"
+       required="true" 
+       requiredMessage="Address is required">
+     </p:inputText>
+     <p:message for="address" />
+    
+    <h:outputLabel value="Phone" />
+    <p:inputText value="#{customerView.phone}"
+       id="phone"
+       required="true" 
+       requiredMessage="Phone No is required"
+       validatorMessage="Phone No should be of 8 digits">
+      <f:validateLength minimum="8" maximum="8" for="phone"></f:validateLength>
+    </p:inputText>
+    <p:message for="phone" />
+    
+      
+    <h:outputLabel value="Comments" />    
+    <p:inputTextarea value="#{customerView.comments}" id="comments" rows="4">     
+    </p:inputTextarea>
+    <p:message for="comments" />    
+       
+    <p:commandButton value="Register" action="#{customerView.addCustomer()}" ajax="false"></p:commandButton>
+    
+   </h:panelGrid>
+  </p:fieldset>
+     
+ </h:form>
+ <h:form>
+     <p:commandButton value="Continue Shopping" action="#{customerView.continueShopping()}" ajax="false" styleClass="ui-priority-primary" style="margin-left: 45%" />
+ </h:form>
+ 
+</h:body> 
+</html>

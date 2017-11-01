@@ -1,0 +1,20 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23 Oct, 2017, 8:51:02 PM
+    Author     : Navi-PC
+*/
+
+.ui-layout-unit-header{
+    background-color: red;
+}
+ .welcome{
+            background-image:url(/ecommerce_frontend/resources/images/background.jpg);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: initial;
+                      
+        }
