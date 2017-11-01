@@ -5,11 +5,15 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
+import matrix.ecommerce.business.EmailSessionBean;
 import matrix.ecommerce.business.FruitBean;
 import matrix.ecommerce.model.Fruit;
 import matrix.ecommerce.model.ShoppingCartItem;
@@ -33,6 +37,9 @@ public class ShoppingView implements Serializable{
     private static final long serialVersionUID = 1L;
     
     @EJB private FruitBean fruitBean;
+    
+    @Inject
+    private EmailSessionBean emailBean;
         
     private List<Fruit> fruits;
     private List<ShoppingCartItem> shoppingCartItems = new LinkedList<>();
@@ -163,6 +170,11 @@ public class ShoppingView implements Serializable{
    
    public String checkOut(){
        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("shoppingCart", shoppingCartItems);
+        try {
+            emailBean.sendEmail();
+        } catch (Exception ex) {
+            Logger.getLogger(ShoppingView.class.getName()).log(Level.SEVERE, null, ex);
+        }
        return("thankyou?faces-redirect=true");
    }
     
