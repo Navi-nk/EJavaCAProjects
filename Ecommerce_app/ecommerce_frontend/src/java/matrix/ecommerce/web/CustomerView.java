@@ -1,16 +1,24 @@
 package matrix.ecommerce.web;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.JMSProducer;
+import javax.jms.Queue;
+import javax.jms.TextMessage;
 import javax.servlet.http.HttpSession;
 import matrix.ecommerce.business.CustomerBean;
 import matrix.ecommerce.business.FruitBean;
@@ -28,11 +36,21 @@ import matrix.ecommerce.model.Order;
 @ViewScoped
 @Named
 public class CustomerView implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
+    
     @EJB private CustomerBean customerBean;
     @Inject ShoppingView shoppingView;
     @EJB private FruitBean fruitBean;
     @EJB private ShoppingBean shoppingBean;
+    
     private List<ShoppingCartItem> shoppingCartItems = new LinkedList<>();  
+    
+    @Resource(lookup = "jms/factory")
+    private ConnectionFactory connectionFactory;
+
+    @Resource(lookup = "jms/warehouse")
+    private Queue warehouseQueue;
     
     private Integer id;
     private String name;
@@ -133,6 +151,16 @@ public class CustomerView implements Serializable{
     }
     
     public String endSession(){
+        
+        try (JMSContext jmsCtx = connectionFactory.createContext()) {
+			JMSProducer producer = jmsCtx.createProducer();
+			TextMessage txtMsg = jmsCtx.createTextMessage();
+			txtMsg.setText(new Date() + ">> " + "Test message");
+			producer.send(warehouseQueue, txtMsg);
+
+		} catch (JMSException ex) {
+			ex.printStackTrace();
+		}
         
         HttpSession sess = (HttpSession) FacesContext.getCurrentInstance().
                 getExternalContext().getSession(false);
