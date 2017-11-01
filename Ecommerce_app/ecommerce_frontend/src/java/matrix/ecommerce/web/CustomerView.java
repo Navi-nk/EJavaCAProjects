@@ -45,7 +45,8 @@ public class CustomerView implements Serializable{
     @EJB private FruitBean fruitBean;
     @EJB private ShoppingBean shoppingBean;
     
-    private List<ShoppingCartItem> shoppingCartItems = new LinkedList<>();  
+    private List<ShoppingCartItem> shoppingCartItems = new LinkedList<>();
+    private Float fullAmount = new Float(0);
     
     @Resource(lookup = "jms/factory")
     private ConnectionFactory connectionFactory;
@@ -61,10 +62,12 @@ public class CustomerView implements Serializable{
   
     @PostConstruct
 	private void init() {
+            
             shoppingCartItems = (List<ShoppingCartItem>) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("shoppingCart");
             if(shoppingCartItems != null){
             for(ShoppingCartItem cItem : shoppingCartItems){
             System.out.println(cItem.getFruit().getName());
+            fullAmount += cItem.getCost();
             }
         }
             
@@ -114,8 +117,24 @@ public class CustomerView implements Serializable{
     public void setComments(String comments) {
         this.comments = comments;
     }
-    
-    
+
+    public List<ShoppingCartItem> getShoppingCartItems() {
+        return shoppingCartItems;
+    }
+    public void setShoppingCartItems(List<ShoppingCartItem> shoppingCartItems) {
+        this.shoppingCartItems = shoppingCartItems;
+    }
+
+    public Float getFullAmount() {
+        return fullAmount;
+    }
+
+    public void setFullAmount(Float fullAmount) {
+        this.fullAmount = fullAmount;
+    }
+
+     
+     
     public String addCustomer()
     {
         Customer customer = new Customer();
