@@ -5,14 +5,17 @@
  */
 package matrix.warehouse.ws;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.Session;
 
 /**
  *
- * @author Navi-PC
+ * @author Navi
  */
 @ApplicationScoped
 public class SessionHandler {
@@ -27,6 +30,17 @@ public class SessionHandler {
     }
     public void removeSession(Session session) {
         sessions.remove(session);
+    }
+    
+    public void closeAllSessions(){
+        sessions.forEach(s -> {
+            try {
+                s.close();
+            } catch (Throwable t) {
+                t.getStackTrace();
+            }
+        });
+        sessions.clear();
     }
     
 }
