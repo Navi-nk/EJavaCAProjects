@@ -32,7 +32,7 @@ SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `fruitmart`.`customer` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `address` VARCHAR(45) NULL DEFAULT NULL,
+  `address` VARCHAR(100) NULL DEFAULT NULL,
   `phone` VARCHAR(45) NULL DEFAULT NULL,
   `email` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
@@ -98,7 +98,7 @@ SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `fruitmart`.`order` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `created_date` DATETIME NOT NULL,
-  `comments` VARCHAR(45) NULL DEFAULT NULL,
+  `comments` VARCHAR(1000) NULL DEFAULT NULL,
   `total_cost` FLOAT NOT NULL,
   `customer_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),

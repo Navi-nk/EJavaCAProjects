@@ -17,8 +17,7 @@ and open the template in the editor.
             background-image:url(/ecommerce_frontend/resources/images/background.jpg);
             background-repeat: no-repeat;
             background-attachment: fixed;
-            background-position: initial;
-                      
+            background-position: initial;      
 }
 
 div.orderdetails{

@@ -256,7 +256,7 @@ public class CustomerView implements Serializable{
             //objectBuilder.add("name",name)
             //         .add("address", address)
             //         .add("comment", comments);
-            objectBuilder.add("name","naval")
+            objectBuilder.add("name","")
                         .add("address", "holland drive")
                         .add("comment", "testing");
         
