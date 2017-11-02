@@ -87,7 +87,7 @@ public class ShoppingCartItem implements Serializable {
     }
 
     public void setSelectedQuantity(int selectedQuantity) {
-        this.selectedQuantity = selectedQuantity;
+        this.selectedQuantity += selectedQuantity;
     }
 
     public float getCost() {

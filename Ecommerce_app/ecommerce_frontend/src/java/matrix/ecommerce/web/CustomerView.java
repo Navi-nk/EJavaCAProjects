@@ -7,8 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jms.ConnectionFactory;
@@ -20,7 +20,6 @@ import javax.jms.TextMessage;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
-import javax.servlet.http.HttpSession;
 import matrix.ecommerce.business.CustomerBean;
 import matrix.ecommerce.business.EmailSessionBean;
 import matrix.ecommerce.business.ShoppingBean;
@@ -33,7 +32,7 @@ import matrix.ecommerce.model.ShoppingCartItem;
  * @author Sarita Sethy
  */
 
-@SessionScoped
+@ViewScoped
 @Named
 public class CustomerView implements Serializable {
 
@@ -68,6 +67,8 @@ public class CustomerView implements Serializable {
 
     @PreDestroy
     private void destroy() {
+        Customer c = new Customer(id, name, email,phone);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("customer", c);
         System.out.println(">> Destroying Customer Details");
     }
 
@@ -165,7 +166,7 @@ public class CustomerView implements Serializable {
     
     private void sendEmailToCustomer(Customer c){
         try {
-            emailBean.sendEmail();
+            emailBean.sendEmail(c.getEmail());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -211,16 +212,6 @@ public class CustomerView implements Serializable {
             }
         }
         return "checkout";
-    }
-
-    public String endSession() {
-        
-        HttpSession sess = (HttpSession) FacesContext.getCurrentInstance().
-                getExternalContext().getSession(false);
-
-        sess.invalidate();
-
-        return ("welcome?faces-redirect=true");
     }
 
     public String continueShopping() {

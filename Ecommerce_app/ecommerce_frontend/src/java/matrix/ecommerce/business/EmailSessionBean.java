@@ -31,13 +31,13 @@ public class EmailSessionBean {
     
     //@EJB CustomerBean cutomerBean;
     
-    public void sendEmail() throws Exception {
+    public void sendEmail(String email) throws Exception {
         
         toGmail.setDebug(true);
         System.out.println(">> after add");
         Message message = new MimeMessage(toGmail);
         message.setSubject("Hi This is a test message");
-        message.setRecipient(Message.RecipientType.TO , new InternetAddress("naval.kumar99@gmail.com","Gautam"));
+        message.setRecipient(Message.RecipientType.TO , new InternetAddress(email,"Gautam"));
         Multipart body = new MimeMultipart(); 
         BodyPart part = new MimeBodyPart();
         part.setText("Thank you for your order");
