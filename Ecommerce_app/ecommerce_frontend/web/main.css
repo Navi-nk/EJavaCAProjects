@@ -10,11 +10,35 @@ and open the template in the editor.
 
 .ui-layout-unit-header{
     background-color: red;
+    text-align: center;
 }
- .welcome{
+
+.welcome{
             background-image:url(/ecommerce_frontend/resources/images/background.jpg);
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-position: initial;
                       
-        }
+}
+
+div.orderdetails{
+            margin: 10px;              
+}
+.panelGridDate{
+            margin-left: auto;
+            margin-right: 10px;
+}
+
+.panelGridCost{
+            margin-left: auto; 
+            margin-right: 90px;
+}
+
+.panelGridCust{
+            margin-left: 10px;
+}
+
+.orderLayout{ 
+            margin: 20px;
+            min-height:400px; min-width:200px;
+}

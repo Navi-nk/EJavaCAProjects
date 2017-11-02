@@ -5,59 +5,94 @@
  */
 package matrix.warehouse.ws;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.websocket.CloseReason;
+import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import matrix.warehouse.business.OrderBean;
+import matrix.warehouse.model.Order;
 
 /**
  *
- * @author Navi-PC
+ * @author Navi
  */
 @RequestScoped
 @ServerEndpoint("/orders")
 public class WarehouseWS {
-    private Session session;
-
+    
+        @Inject
+        private SessionHandler sessionHandler;
+        @EJB 
+        private OrderBean orderBean;
+                
 	@OnMessage
 	public void message(String message) {
-		System.out.println(">>>>message = " + message);
+		System.out.println("message received = " + message);
+                
 	}
 
 	@OnOpen
-	public void open(Session sess) {
-		session = sess;
-		System.out.println(">>>connection opened: " + session.getId());
+	public void open(Session session) {
+		sessionHandler.addSession(session);
+		System.out.println("connection opened: " + session.getId());
+                List<Order> orders = orderBean.getAllOrder();
+                
+                try {
+                    for(Order o : orders){
+                        for (Session s: session.getOpenSessions())
+                            s.getBasicRemote().sendObject(o.toJson());
+                        }
+                }catch (Throwable t) {
+                t.printStackTrace();
+                try { session.close(); } catch (Throwable tt) { }
+            }
+                
 	}
-
-	@OnClose
-	public void close(CloseReason reason) {
-		System.out.println(">>> connection closing: " + session.getId());
-		System.out.println("\treason = " + reason.toString());
-	}
+        
+        @OnClose
+        public void close(Session session) {
+            System.out.println("connection closed: " + session.getId());
+            sessionHandler.removeSession(session);
+        }   
+        
+        @OnError
+        public void onError(Throwable t) {
+            t.printStackTrace();
+            sessionHandler.closeAllSessions();
+        }
         
         public void observeEvent(@Observes String message){
             System.out.println("inside observer");
             System.out.println(message);
             try {
-                JsonReader jsonReader = Json.createReader(new StringReader(message));
-                JsonObject object = jsonReader.readObject();
-                jsonReader.close();
-			for (Session s: session.getOpenSessions())
-				s.getBasicRemote().sendObject(object);
-		} catch (Throwable t) {
-			t.printStackTrace();
-			try { session.close(); } catch (Throwable tt) { }
-		}
-        }        
-        
+                JsonObject object;
+                try (JsonReader jsonReader = Json.createReader(new StringReader(message))) {
+                    object = jsonReader.readObject();
+                }
+                
+            	for (Session s: sessionHandler.getSessions())
+                    s.getBasicRemote().sendObject(object);
+		
+            } catch (Throwable t) {
+                t.printStackTrace();
+                sessionHandler.closeAllSessions();
+            }
+        }
 }
