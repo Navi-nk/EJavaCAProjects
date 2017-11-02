@@ -6,12 +6,13 @@
 <h:head>
 
 </h:head> 
-<h:body> 
+<h:body styleClass="welcome"> 
  <h2>Check Out</h2>
+ <link rel="stylesheet" href="main.css"/>
  <p:separator />
  <h:form id="qform">
-  <p:fieldset legend="Registration Form" widgetVar="regWidget" style="width: 600px;">
-   <h:panelGrid columns="3" width="700" border="0">
+  <p:fieldset legend="Customer Information" widgetVar="regWidget" style="margin-left: 45%">
+   <h:panelGrid columns="3" width="500" border="0">
     
     <h:outputLabel value="Name" />
     <p:inputText value="#{customerView.name}" 
@@ -19,7 +20,7 @@
        required="true" 
        requiredMessage="Name is required" 
        >
-        <p:ajax event="keyup" update="qform" listener="#{customerView.checkCustomer}" />
+        <p:ajax event="blur" update="qform" listener="#{customerView.checkCustomer}" />
     </p:inputText>
    
     <p:message for="name"/>
@@ -62,9 +63,8 @@
     <h:outputLabel value="Comments" />    
     <p:inputTextarea value="#{customerView.comments}" id="comments" rows="4" maxlength="300" cols="45">     
     </p:inputTextarea>
-    <p:message for="comments" />    
-       
-    <p:commandButton value="Register" action="#{customerView.addCustomer()}" ajax="false"></p:commandButton>
+    <p:message for="comments" />         
+    <p:commandButton value="Save" action="#{customerView.addCustomer()}" ajax="false"></p:commandButton>
     
    </h:panelGrid>
   </p:fieldset>
