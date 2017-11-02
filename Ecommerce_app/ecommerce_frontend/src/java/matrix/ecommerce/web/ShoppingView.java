@@ -11,7 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 import javax.inject.Named;
 import matrix.ecommerce.business.EmailSessionBean;
 import matrix.ecommerce.business.FruitBean;
@@ -38,7 +37,7 @@ public class ShoppingView implements Serializable{
     
     @EJB private FruitBean fruitBean;
     
-    @Inject
+    @EJB
     private EmailSessionBean emailBean;
         
     private List<Fruit> fruits;
@@ -134,7 +133,7 @@ public class ShoppingView implements Serializable{
                    setSelectedFruit(f);
            });
        System.out.println("name:"+selectedFruit.getName());
-       Map<String,Object> options = new HashMap<String, Object>();
+       Map<String,Object> options = new HashMap<>();
        options.put("resizable", false);
        options.put("contentHeight", 300);
        options.put("height", 150);  
@@ -172,7 +171,7 @@ public class ShoppingView implements Serializable{
    public String checkOut(){
        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("shoppingCart", shoppingCartItems);
         try {
-           // emailBean.sendEmail();
+            emailBean.sendEmail();
         } catch (Exception ex) {
             Logger.getLogger(ShoppingView.class.getName()).log(Level.SEVERE, null, ex);
         }

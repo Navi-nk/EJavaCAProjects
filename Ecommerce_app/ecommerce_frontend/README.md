@@ -1,3 +1,3 @@
-E commerce FrontEnd - FruitMart
+E-commerce FrontEnd - FruitMart
 -------------------------------
 

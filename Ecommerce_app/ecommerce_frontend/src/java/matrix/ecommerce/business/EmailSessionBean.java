@@ -6,9 +6,7 @@
 package matrix.ecommerce.business;
 
 import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import javax.ejb.Stateless;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Multipart;
@@ -25,8 +23,7 @@ import javax.mail.internet.MimeMultipart;
  *
  */
 
-@Named
-@RequestScoped
+@Stateless
 public class EmailSessionBean {
     
     @Resource (lookup="mail/shoppingcart")

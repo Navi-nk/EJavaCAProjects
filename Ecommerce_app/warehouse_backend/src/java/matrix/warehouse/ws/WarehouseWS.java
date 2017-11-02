@@ -5,12 +5,8 @@
  */
 package matrix.warehouse.ws;
 
-import java.io.IOException;
 import java.io.StringReader;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
@@ -18,8 +14,6 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.websocket.CloseReason;
-import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -54,7 +48,7 @@ public class WarehouseWS {
     public void open(Session session,
             @DefaultValue("false") @PathParam("history") Boolean isHistory) {
         sessionHandler.addSession(session);
-        System.out.println("connection opened: " + session.getId()+ " "+isHistory );
+        System.out.println("connection opened: " + session.getId() + " " + isHistory);
         if (isHistory) {
             List<Order> orders = orderBean.getAllOrder();
 
