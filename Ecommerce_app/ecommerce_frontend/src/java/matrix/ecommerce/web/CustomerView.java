@@ -67,7 +67,7 @@ public class CustomerView implements Serializable {
 
     @PreDestroy
     private void destroy() {
-        Customer c = new Customer(id, name, email,phone);
+        Customer c = new Customer(id, name, email, phone, address);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("customer", c);
         System.out.println(">> Destroying Customer Details");
     }

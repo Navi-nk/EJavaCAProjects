@@ -58,11 +58,12 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
-    public Customer(Integer id, String name, String email,String phone) {
+    public Customer(Integer id, String name, String email,String phone, String address) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
+        this.address = address;
     }
 
     public Integer getId() {
