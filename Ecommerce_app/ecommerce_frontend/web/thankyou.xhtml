@@ -37,17 +37,17 @@
 
                         <h:panelGrid columns="2" cellpadding="5" styleClass="panelGridCust" >            
                             <h:outputText value="Name:" /> 
-                            <h:outputText value="naval"/>
+                            <h:outputText value="#{customerView.name}"/>
                             <h:outputText value="Address:" /> 
-                            <h:outputText value="test" /> 
+                            <h:outputText value="#{customerView.address}" /> 
                             <h:outputText value="Contact:" /> 
-                            <h:outputText value="1111" />
+                            <h:outputText value="#{customerView.phone}" />
                             <h:outputText value="Email:" /> 
-                            <h:outputText value="abc@afc" />
+                            <h:outputText value="#{customerView.email}" />
 
                         </h:panelGrid >
                     </p:panel>
-                    <p:dataTable var="item" value="#{customerView.shoppingCartItems}">
+                    <p:dataTable var="item" value="#{shoppingView.shoppingCartItems}">
                         <p:column headerText="Name">
                             <h:outputText value="#{item.fruitId.name}" />
                         </p:column>
@@ -68,7 +68,7 @@
 
                         <h:panelGrid columns="2" cellpadding="5" styleClass="panelGridCost"  >            
                             <h:outputText value="Total Amount" /> 
-                            <h:outputText value="#{customerView.fullAmount} SGD"/>
+                            <h:outputText value="#{shoppingView.fullAmount} SGD"/>
                             
                         </h:panelGrid>
                     </p:panel>

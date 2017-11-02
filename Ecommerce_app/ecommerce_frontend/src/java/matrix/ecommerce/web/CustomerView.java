@@ -1,17 +1,14 @@
 package matrix.ecommerce.web;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jms.ConnectionFactory;
@@ -25,249 +22,227 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.http.HttpSession;
 import matrix.ecommerce.business.CustomerBean;
-import matrix.ecommerce.business.FruitBean;
+import matrix.ecommerce.business.EmailSessionBean;
 import matrix.ecommerce.business.ShoppingBean;
 import matrix.ecommerce.model.Customer;
 import matrix.ecommerce.model.Order;
 import matrix.ecommerce.model.ShoppingCartItem;
+
 /**
  *
  * @author Sarita Sethy
  */
 
-@ViewScoped
+@SessionScoped
 @Named
-public class CustomerView implements Serializable{
-    
+public class CustomerView implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
-    @EJB private CustomerBean customerBean;
-    @Inject ShoppingView shoppingView;
-    @EJB private FruitBean fruitBean;
-    @EJB private ShoppingBean shoppingBean;
 
-    
-    private List<ShoppingCartItem> shoppingCartItems = new LinkedList<>();
-    private Float fullAmount = new Float(0);
+    @EJB
+    private CustomerBean customerBean;
+    @Inject
+    private ShoppingView shoppingView;
+    @EJB
+    private ShoppingBean shoppingBean;
+    @EJB
+    private EmailSessionBean emailBean;
 
-    @Resource(lookup = "jms/warehouse")
+    @Resource(lookup = "jms/factory")
     private ConnectionFactory connectionFactory;
 
-    @Resource(lookup = "jms/warehouseQueue")
+    @Resource(lookup = "jms/warehouse")
     private Queue warehouseQueue;
-    
+
     private Integer id;
     private String name;
     private String address;
     private String phone;
     private String comments;
     private String email;
-  
-    @PostConstruct
-	private void init() {
-            
-            shoppingCartItems = (List<ShoppingCartItem>) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("shoppingCart");
-            if(shoppingCartItems != null){
-            for(ShoppingCartItem cItem : shoppingCartItems){
-            System.out.println(cItem.getFruitId().getName());
-             fullAmount += cItem.getCost();
-            }
-        }
-            
-		System.out.println(">> Creating Customer");
-	}
 
-	@PreDestroy
-	private void destroy() {
-		System.out.println(">> Destroying Customer Details");
-	}
+    @PostConstruct
+    private void init() {
+        System.out.println(">> Creating Customer");
+    }
+
+    @PreDestroy
+    private void destroy() {
+        System.out.println(">> Destroying Customer Details");
+    }
 
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
-    
 
     public String getName() {
         return name;
-    }     
+    }
+
     public void setName(String name) {
         this.name = name;
     }
-    
-    
+
     public String getAddress() {
         return address;
     }
+
     public void setAddress(String address) {
         this.address = address;
     }
-    
-    
+
     public String getPhone() {
         return phone;
     }
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    
+
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    
+
     public String getComments() {
         return comments;
     }
+
     public void setComments(String comments) {
         this.comments = comments;
     }
 
-    public List<ShoppingCartItem> getShoppingCartItems() {
-        return shoppingCartItems;
-    }
-    public void setShoppingCartItems(List<ShoppingCartItem> shoppingCartItems) {
-        this.shoppingCartItems = shoppingCartItems;
-    }
+    public String addCustomer() {
+        Customer customer = customerBean.findCustomer(name);
+        if (customer == null) {
+            customer = new Customer();
+            customer.setName(name);
+            customer.setAddress(address);
+            customer.setPhone(phone);
+            customer.setEmail(email);
+            customerBean.addCustomer(customer);
+        } else {
+            customer.setAddress(address);
+            customer.setPhone(phone);
+            customer.setEmail(email);
+            customerBean.updateCustomer(customer);
+        }
 
-    public Float getFullAmount() {
-        return fullAmount;
-    }
+        storeShoppingCart(customer);
+        
+        sendEmailToCustomer(customer);
+        
+        sendOrderToWarehouse();
+        
+        shoppingView.calculateFullAmmount();
 
-    public void setFullAmount(Float fullAmount) {
-        this.fullAmount = fullAmount;
-    }
-
-     
-     
-    public String addCustomer()
-    {
-            Customer customer = customerBean.findCustomer(name);
-            if(customer==null)
-            {
-                customer = new Customer();
-                customer.setName(name);
-                customer.setAddress(address);
-                customer.setPhone(phone);
-                customer.setEmail(email);
-                customerBean.addCustomer(customer);
-            }
-            else
-            {
-                customer.setAddress(address);
-                customer.setPhone(phone);
-                customer.setEmail(email);
-                customerBean.updateCustomer(customer);
-            }
-                
-                      
-            
-            List<ShoppingCartItem> shoppingCart = shoppingView.getShoppingCartItems();
-            
-            Order order =  new Order();
-            if(shoppingCart.size()>0)
-            {
-                float totalCost =0;
-                for(ShoppingCartItem cart:shoppingCart)
-                {
-                    totalCost = totalCost + cart.getCost();
-                }
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                Date date = new Date();
-                order.setComments(comments);
-                order.setTotalCost(totalCost);
-                order.setCreatedDate(new Date());
-                order.setCustomerId(customer);
-                shoppingBean.addCart(order);
-            }
-            
-            
-            if(shoppingCart.size()>0)
-            {
-                for(ShoppingCartItem cart:shoppingCart)
-                {
-                    cart.setOrderId(order);
-                    shoppingBean.addFruitCart(cart);
-                }
-            }
-           
-                     
         return ("thankyou");
     }
-    public String checkCustomer()
-    {
-        //Check if customer exist
-        Customer existCustomer;
-        if(this.name.length()>0)
-        {
-            existCustomer = customerBean.findCustomer(name);
-            if(existCustomer!=null)
-            {
-                this.setAddress(existCustomer.getName());
-                this.setPhone(existCustomer.getPhone());
-                this.setEmail(existCustomer.getEmail());
-                this.setId(existCustomer.getId());
-                        
-            }
-        }
-        
-        return "checkout";
-    }
     
-    public String endSession(){
-        
+    private void sendOrderToWarehouse(){
         try (JMSContext jmsCtx = connectionFactory.createContext()) {
             JMSProducer producer = jmsCtx.createProducer();
             TextMessage txtMsg = jmsCtx.createTextMessage();
-            //txtMsg.setText(new Date() + ">> " + shoppingCartItems.get(0).getFruit().getName());
+            
             String msg = createJSONMessage();
-            if(null != msg){
+            
+            if (null != msg) {
                 txtMsg.setText(msg);
                 producer.send(warehouseQueue, txtMsg);
-            }
-            else{
+            } else
                 System.out.println("Cannot send message - order details is not found");
-                return null;
-            }
         } catch (JMSException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    private void sendEmailToCustomer(Customer c){
+        try {
+            emailBean.sendEmail();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void storeShoppingCart(Customer c){
+        List<ShoppingCartItem> shoppingCart = shoppingView.getShoppingCartItems();
+
+        Order order = new Order();
+        if (shoppingCart.size() > 0) {
+            float totalCost = 0;
+            for (ShoppingCartItem cart : shoppingCart) {
+                totalCost = totalCost + cart.getCost();
+            }
+            //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            order.setComments(comments);
+            order.setTotalCost(totalCost);
+            order.setCreatedDate(date);
+            order.setCustomerId(c);
+            shoppingBean.addCart(order);
+        }
+
+        if (shoppingCart.size() > 0) {
+            for (ShoppingCartItem cart : shoppingCart) {
+                cart.setOrderId(order);
+                shoppingBean.addFruitCart(cart);
+            }
+        }
+    }
+
+    public String checkCustomer() {
+        //Check if customer exist
+        Customer existCustomer;
+        if (this.name.length() > 0) {
+            existCustomer = customerBean.findCustomer(name);
+            if (existCustomer != null) {
+                this.setAddress(existCustomer.getAddress());
+                this.setPhone(existCustomer.getPhone());
+                this.setEmail(existCustomer.getEmail());
+                this.setId(existCustomer.getId());
+
+            }
+        }
+        return "checkout";
+    }
+
+    public String endSession() {
         
         HttpSession sess = (HttpSession) FacesContext.getCurrentInstance().
                 getExternalContext().getSession(false);
 
-		sess.invalidate();
-                
-                return ("welcome?faces-redirect=true");
-    } 
-    
-    public String continueShopping(){
+        sess.invalidate();
+
+        return ("welcome?faces-redirect=true");
+    }
+
+    public String continueShopping() {
         return ("shopping?faces-redirect=true");
     }
-    
-    public String createJSONMessage(){
-        if(shoppingCartItems != null){
+
+    public String createJSONMessage() {
+        List<ShoppingCartItem> shoppingCart = shoppingView.getShoppingCartItems();
+        if (shoppingCart != null) {
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            //objectBuilder.add("name",name)
-            //         .add("address", address)
-            //         .add("comment", comments);
-            objectBuilder.add("name","")
-                        .add("address", "holland drive")
-                        .add("comment", "testing");
-        
+            objectBuilder.add("name",name)
+                     .add("address", address)
+                     .add("comment", comments);
+
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-        
-            shoppingCartItems.forEach( items -> {
+
+            shoppingCart.forEach(items -> {
                 arrayBuilder.add(Json.createObjectBuilder()
-                .add("item", items.getFruitId().getName())
-                .add("quantity", items.getSelectedQuantity()));
+                        .add("item", items.getFruitId().getName())
+                        .add("quantity", items.getSelectedQuantity()));
             });
-            
+
             objectBuilder.add("cart", arrayBuilder.build());
             return objectBuilder.build().toString();
         }

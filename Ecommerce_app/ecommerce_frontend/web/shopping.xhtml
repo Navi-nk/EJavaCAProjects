@@ -57,10 +57,12 @@
                              <h:outputText value="#{items.cost} SGD"/>
                              
                          </h:panelGrid> 
-                         <h:commandButton value="Remove" action="#{shoppingView.removeItem(items.fruitId)}" style="margin-left: 35%; margin-top: 2%"/>
+                         <h:commandButton value="Remove" action="#{shoppingView.removeItem()}" style="margin-left: 35%; margin-top: 2%">
+                             <f:param name="selected_fruit_id" value="#{items.fruitId.id}" />
+                         </h:commandButton>
                      </p:panel>
                  </c:forEach>
-                 <h:commandButton value="Check Out" id="checkout" action="checkout" rendered="#{shoppingView.shoppingCartItems.size() > 0}" style="margin-left: 35%; margin-top: 2%"/>
+                 <h:commandButton value="Check Out" id="checkout" action="#{shoppingView.checkOut()}" rendered="#{shoppingView.shoppingCartItems.size() > 0}" style="margin-left: 35%; margin-top: 2%"/>
           </h:form>
         </p:layoutUnit>
     </p:layout>
