@@ -5,7 +5,6 @@
  */
 package matrix.ecommerce.business;
 
-import java.io.Serializable;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -24,7 +23,7 @@ public class FruitBean {
 
 	public List<Fruit> getAllFruits() {
 
-		TypedQuery<Fruit> query = em.createQuery("select f from Fruit f", Fruit.class);
+		TypedQuery<Fruit> query = em.createNamedQuery("Fruit.findAll",Fruit.class);
 		return (query.getResultList());
 	}	
 }

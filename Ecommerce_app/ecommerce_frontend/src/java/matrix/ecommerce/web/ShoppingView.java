@@ -15,13 +15,6 @@ import matrix.ecommerce.model.Fruit;
 import matrix.ecommerce.model.ShoppingCartItem;
 import org.primefaces.context.RequestContext;
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author Navi
@@ -39,6 +32,8 @@ public class ShoppingView implements Serializable{
     private ShoppingCartItem cartItem;
     private Integer newQuantity;
     private Fruit selectedFruit;
+   
+    
 
     public ShoppingView() {
         this.cartItem = new ShoppingCartItem(Float.valueOf(0), 0);
@@ -82,25 +77,24 @@ public class ShoppingView implements Serializable{
     public void setSelectedFruit(Fruit selectedFruit) {
         this.selectedFruit = selectedFruit;
     }
-    
-    
+  
     public void storeSelectedFruit() { 
         for(ShoppingCartItem cItem : shoppingCartItems){
-            System.out.println(cItem.getFruit().getName() +" "+selectedFruit.getName());
-            if((cItem.getFruit()).equals(selectedFruit)){
+            System.out.println(cItem.getFruitId().getName() +" "+selectedFruit.getName());
+            if((cItem.getFruitId()).equals(selectedFruit)){
                 cartItem = cItem;
                 System.out.println("fruit found");
                 return;
             }
         }
         System.out.println("new fruit added");
-        cartItem.setFruit(selectedFruit);
+        cartItem.setFruitId(selectedFruit);
         shoppingCartItems.add(cartItem);
     }
 
     public void storeSelectedQuantity() {
         System.out.println("inside increase");
-        cartItem.increaseQuantity(newQuantity);  
+        cartItem.setSelectedQuantity(newQuantity);  
         System.out.println(cartItem.getSelectedQuantity());
         
     }
@@ -122,9 +116,9 @@ public class ShoppingView implements Serializable{
        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fruit_id");
        System.out.println("id:"+id);
        
-       fruits.forEach(f -> { 
-           if (String.valueOf(f.getId()).equals(id))
-                   setSelectedFruit(f);
+       fruits.forEach(fruit -> { 
+           if (String.valueOf(fruit.getId()).equals(id))
+                   setSelectedFruit(fruit);
            });
        System.out.println("name:"+selectedFruit.getName());
        Map<String,Object> options = new HashMap<String, Object>();
@@ -138,8 +132,8 @@ public class ShoppingView implements Serializable{
    public void removeItem(Fruit f){
        System.out.println("matrix.ecommerce.web.ShoppingView.removeItem()");
        for(ShoppingCartItem cItem : shoppingCartItems){
-            System.out.println(cItem.getFruit().getName());
-            if((cItem.getFruit()).equals(f)){
+            System.out.println(cItem.getFruitId().getName());
+            if((cItem.getFruitId()).equals(f)){
                 shoppingCartItems.remove(cItem);
                 return;
             }

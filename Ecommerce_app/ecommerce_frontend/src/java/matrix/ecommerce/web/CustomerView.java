@@ -1,6 +1,9 @@
 package matrix.ecommerce.web;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -25,10 +28,8 @@ import matrix.ecommerce.business.CustomerBean;
 import matrix.ecommerce.business.FruitBean;
 import matrix.ecommerce.business.ShoppingBean;
 import matrix.ecommerce.model.Customer;
-import matrix.ecommerce.model.Fruit;
-import matrix.ecommerce.model.ShoppingCartItem;
-import matrix.ecommerce.model.ShoppingCartPK;
 import matrix.ecommerce.model.Order;
+import matrix.ecommerce.model.ShoppingCartItem;
 /**
  *
  * @author Sarita Sethy
@@ -44,13 +45,13 @@ public class CustomerView implements Serializable{
     @Inject ShoppingView shoppingView;
     @EJB private FruitBean fruitBean;
     @EJB private ShoppingBean shoppingBean;
-    
+        
     private List<ShoppingCartItem> shoppingCartItems = new LinkedList<>();  
     
-    @Resource(lookup = "jms/factory")
+    @Resource(lookup = "jms/warehouse")
     private ConnectionFactory connectionFactory;
 
-    @Resource(lookup = "jms/warehouse")
+    @Resource(lookup = "jms/warehouseQueue")
     private Queue warehouseQueue;
     
     private Integer id;
@@ -58,13 +59,14 @@ public class CustomerView implements Serializable{
     private String address;
     private String phone;
     private String comments;
+    private String email;
   
     @PostConstruct
 	private void init() {
             shoppingCartItems = (List<ShoppingCartItem>) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("shoppingCart");
             if(shoppingCartItems != null){
             for(ShoppingCartItem cItem : shoppingCartItems){
-            System.out.println(cItem.getFruit().getName());
+            System.out.println(cItem.getFruitId().getName());
             }
         }
             
@@ -107,6 +109,13 @@ public class CustomerView implements Serializable{
         this.phone = phone;
     }
     
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
     
     public String getComments() {
         return comments;
@@ -118,37 +127,76 @@ public class CustomerView implements Serializable{
     
     public String addCustomer()
     {
-        Customer customer = new Customer();
-        customer.setName(name);
-        customer.setAddress(address);
-        customer.setPhone(phone);
-        customerBean.addCustomer(customer);
-        
-        List<Fruit> fruits = shoppingView.getFruits();
-         Order cart =  new Order();
-        if(fruits.size()>0)
-        {
-            cart.setComments(comments);
-         //   cart.setCustomerId(customer.getId());
-            shoppingBean.addCart(cart);
-        }
-        
-        for(Fruit fruit:fruits)
-        {
-            ShoppingCartPK fruitCartPK = new ShoppingCartPK(cart.getId(),fruit.getId().intValue());
-            ShoppingCartItem fruitCart = new ShoppingCartItem();
-           // fruitCart.setFruitCartPK(fruitCartPK);
-            shoppingBean.addFruitCart(fruitCart);
-        }
+            Customer customer = customerBean.findCustomer(name);
+            if(customer==null)
+            {
+                customer = new Customer();
+                customer.setName(name);
+                customer.setAddress(address);
+                customer.setPhone(phone);
+                customer.setEmail(email);
+                customerBean.addCustomer(customer);
+            }
+            else
+            {
+                customer.setAddress(address);
+                customer.setPhone(phone);
+                customer.setEmail(email);
+                customerBean.updateCustomer(customer);
+            }
+                
+                      
+            
+            List<ShoppingCartItem> shoppingCart = shoppingView.getShoppingCartItems();
+            
+            Order order =  new Order();
+            if(shoppingCart.size()>0)
+            {
+                float totalCost =0;
+                for(ShoppingCartItem cart:shoppingCart)
+                {
+                    totalCost = totalCost + cart.getCost();
+                }
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                order.setComments(comments);
+                order.setTotalCost(totalCost);
+                order.setCreatedDate(new Date());
+                order.setCustomerId(customer);
+                shoppingBean.addCart(order);
+            }
+            
+            
+            if(shoppingCart.size()>0)
+            {
+                for(ShoppingCartItem cart:shoppingCart)
+                {
+                    cart.setOrderId(order);
+                    shoppingBean.addFruitCart(cart);
+                }
+            }
+           
+                     
         return ("thankyou");
     }
-    public boolean checkCustomer()
+    public String checkCustomer()
     {
         //Check if customer exist
-        Customer customer = customerBean.findCustomer(name);
-        if(customer==null)
-        return false;
-        return true;
+        Customer existCustomer;
+        if(this.name.length()>0)
+        {
+            existCustomer = customerBean.findCustomer(name);
+            if(existCustomer!=null)
+            {
+                this.setAddress(existCustomer.getName());
+                this.setPhone(existCustomer.getPhone());
+                this.setEmail(existCustomer.getEmail());
+                this.setId(existCustomer.getId());
+                        
+            }
+        }
+        
+        return "checkout";
     }
     
     public String endSession(){
@@ -196,7 +244,7 @@ public class CustomerView implements Serializable{
         
             shoppingCartItems.forEach( items -> {
                 arrayBuilder.add(Json.createObjectBuilder()
-                .add("item", items.getFruit().getName())
+                .add("item", items.getFruitId().getName())
                 .add("quantity", items.getSelectedQuantity()));
             });
             
