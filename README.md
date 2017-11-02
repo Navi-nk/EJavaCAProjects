@@ -7,7 +7,7 @@ _Project 2 : Warehouse Backend_
 
 The projects are built using 
 * JAVA EE 8 components on Netbeans 8.2 IDE
-* MySQL database(V 5.7) for persitance.
+* MySQL database(V 5.7) for persistance.
 * Payara Application Server (V 4.1)
 * PrimeFaces (V 6.1) for E commerce FrontEnd UI
 * AngularJS (V 1.6) for Warehouse Backend UI

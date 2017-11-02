@@ -10,15 +10,22 @@ __Prerequistes for running the application__
 
 Once the project is setup and ran in netbeans, the subsequent webpage launched will prompt user to provide the websocket url in order to connect to the backend. Use one of the following url -
 
->ws://localhost:8080/warehouse/orders/ 
+> __ws://localhost:8080/warehouse/orders/__  
 >As soon as a client connects using this url, the web page will start displaying the live order messages received from e-commerce front application from that moment on.
 
->ws://localhost:8080/warehouse/orders/true 
->As soon as a client connects using this url, the history of order messages stored in the database will also be displayed and from then on the live messages received will be displayed,
+>__ws://localhost:8080/warehouse/orders/true__  
+>As soon as a client connects using this url, the history of order messages stored in the database will also be displayed and from then on the live messages received will be displayed.
 
 #### Features implemented in the application ####
 
-__Persistance Model__
 
-The below diagram shows the ER diagram of the tables used for persistance in the application.
-![picture alt](db_model/ER_diagram.png)
+1. The below diagram shows the ER diagram of the tables used for persistance in the application.
+![picture alt](db_model/ER_diagram.png)  
+These two tables are used to store the incoming order details and are created to match the schema of received JSON object.
+
+2. The incoming messages are read by the MDB(***WarehouseBean.java***) and sent to the websocket class (***WarehouseWS.java***) via injected Event class. The websocket class implements a method which uses the ***@Observes*** annotation to listen for the event fired from MDB - The event contains the received order messages. A application scoped session handler is created to store the created sessions and to make sure the event handling can access the connected sessions in order to broadcast the messages. 
+
+3. The earlier mentioned two url schemes are used to provide an option to the user of either viewing the order history along with the incoming messages or to view only current messages. 
+
+
+
