@@ -139,6 +139,7 @@ public class ShoppingView implements Serializable{
        options.put("contentHeight", 300);
        options.put("height", 150);  
        options.put("width",650);
+       options.put("modal",true);
        RequestContext.getCurrentInstance().openDialog("enterQuantity", options, null);
    }
    
@@ -171,7 +172,7 @@ public class ShoppingView implements Serializable{
    public String checkOut(){
        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("shoppingCart", shoppingCartItems);
         try {
-            emailBean.sendEmail();
+           // emailBean.sendEmail();
         } catch (Exception ex) {
             Logger.getLogger(ShoppingView.class.getName()).log(Level.SEVERE, null, ex);
         }

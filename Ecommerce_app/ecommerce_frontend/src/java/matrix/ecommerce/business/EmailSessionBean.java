@@ -32,7 +32,7 @@ public class EmailSessionBean {
     @Resource (lookup="mail/shoppingcart")
     private Session toGmail; 
     
-    @EJB CustomerBean cutomerBean;
+    //@EJB CustomerBean cutomerBean;
     
     public void sendEmail() throws Exception {
         

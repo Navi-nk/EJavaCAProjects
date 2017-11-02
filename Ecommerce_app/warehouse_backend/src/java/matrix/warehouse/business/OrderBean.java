@@ -39,7 +39,7 @@ public class OrderBean {
     {
             em.persist(order);
     }
-    //This is because we dont want to use the transaction from the mdb. If the exception occurs at this point
+    //This is because we dont want to use the transaction from the mdb. If an exception occurs at this point
     //we want to rollback the db transaction and not the message transaction.
     //It is observed that if a transaction fails at mdb due to exception then it goes into a infinite loop.
     //This meeans the queue is continously trying to push the message to mdb.
