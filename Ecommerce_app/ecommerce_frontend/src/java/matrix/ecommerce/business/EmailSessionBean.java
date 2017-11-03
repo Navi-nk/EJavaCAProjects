@@ -35,8 +35,7 @@ public class EmailSessionBean {
     private Customer toCustomer;
     private List<ShoppingCartItem> currentCart;
     private Order newOrder;
-    
-    
+        
     public void sendEmail(Customer c, List<ShoppingCartItem> shoppingCart, Order order) throws Exception {
         
         try {
@@ -46,15 +45,12 @@ public class EmailSessionBean {
             toGmail.setDebug(true);
             System.out.println(">> after add");
             Message message = new MimeMessage(toGmail);
-            message.setSubject("Hi This is a test message");
-            message.setRecipient(Message.RecipientType.TO , new InternetAddress(toCustomer.getEmail(),"Gautam"));
-//            Multipart body = new MimeMultipart(); 
-//            BodyPart part = new MimeBodyPart();
-//            part.setText("Thank you for your order");
-//            body.addBodyPart(part); 
-//            message.setContent(body);
-
-            String sb = "<head>" +
+            message.setSubject("FruitMart Order Summary for Order No: " + newOrder.getId() );
+            message.setRecipient(Message.RecipientType.TO , new InternetAddress(toCustomer.getEmail(),toCustomer.getName()));
+            
+            StringBuilder content = new StringBuilder();
+            content.append( 
+                        "<head>" +
                         "<style type=\"text/css\">" +
                         "  .blue { color: #00F; }" +
                         "  table.GeneratedTable { width: 100%; background-color: #ffffff; border-collapse: collapse; border-width: 3px; border-color: #ffcc00; border-style: solid; color: #000000;}" +
@@ -65,17 +61,35 @@ public class EmailSessionBean {
                         "<h2 class=\"blue\">" + "Order Summary for OrderNo " + newOrder.getId() + " dated " + newOrder.getCreatedDate() + "</h2>" +
                         "<p>" + "Dear <em>" + toCustomer.getName() + "</em>," + "</p>" +
                         "<p>Thanks for Shopping with us. Please find below a summary of your order.</p>" +
-                        "<p>Your Order shall be dispatched shortly</p>" +
                         "<table class=\"GeneratedTable\">" +
-                        "<tr align=\"center\">" + "Order Details" + "</tr>" +
+                        "<tr align=\"center\" bgcolor=\"#F77F4E\" multiple><th>" + "Order Details" + "</th></tr>" +
                         "<tr>" + "<p>Name: " + toCustomer.getName() + "</p>" +
                                  "<p>Address: " + toCustomer.getAddress() + "</p>" +
                                  "<p>Contact: " + toCustomer.getPhone() + "</p>" +
-                                 "<p>Email: " + toCustomer.getEmail() + "</p>" + "</tr>" +                         
+                                 "<p>Email: " + toCustomer.getEmail() + "</p>" +
+                                 "<p>Comments: " + newOrder.getComments() + "</p>" + "</tr>" +
+                        "<tr><table class=\"GeneratedTable\">" +
+                        "<tr align=\"center\" bgcolor=\"#EBEBE9\" multiple><th>Name</th><th>Price</th><th>Quantity</th><th>Cost</th></tr>");
+            
+            for (ShoppingCartItem item : currentCart) {
+                
+                content.append("<tr>");
+                content.append("<td>" + item.getFruit().getName() + "</td>");
+                content.append("<td>" + item.getFruit().getPrice() + "</td>");
+                content.append("<td>" + item.getSelectedQuantity() + "</td>");
+                content.append("<td>" + item.getCost() + "</td>");
+                content.append("</tr>");
+                
+            }
+            
+            content.append(
+                        "</table></tr>" +
+                        "<tr align=\"right\"> Total Amount: " + order.getTotalCost() + "SGD</tr>" +
                         "</table>" +
+                        "<p>Your Order shall be dispatched shortly</p>" +        
                         "<p><strong>Thanks & Regards</strong></p>" +
-                        "<p><strong>TeamMatrix@FruitMart</strong></p>";
-            message.setContent(sb, "text/html; charset=utf-8");
+                        "<p><strong>TeamMatrix@FruitMart</strong></p>");
+            message.setContent(content.toString(), "text/html; charset=utf-8");
             
             Transport transport = toGmail.getTransport();
             transport.connect();
