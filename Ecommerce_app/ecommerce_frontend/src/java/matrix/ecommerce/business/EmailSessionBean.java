@@ -56,14 +56,15 @@ public class EmailSessionBean {
 
             String sb = "<head>" +
                         "<style type=\"text/css\">" +
-                        "  .red { color: #f00; }" +
+                        "  .blue { color: #00F; }" +
                         "</style>" +
                         "</head>" +
                         "<h2 class=\"blue\">" + "Order Summary for OrderNo " + newOrder.getId() + " dated " + newOrder.getCreatedDate() + "</h2>" +
-                        "<p>" +
-                        "This is a test message, <em>refining</em> to look like ecommerce order, " +
-                        "Thanks for Shopping <strong>" +
-                        "TeamMatrix</strong>.</p>";
+                        "<p>" + "Dear <em>" + toCustomer.getName() + "</em>," + "</p>" +
+                        "<p>Thanks for Shopping with us. Please find below a summary of your order.</p>" +
+                        "<p>Your Order shall be dispatched shortly</p>" +
+                        "<p><strong>Thanks & Regards</strong></p>" +
+                        "<p><strong>TeamMatrix@FruitMart</strong></p>";
             message.setContent(sb, "text/html; charset=utf-8");
             
             Transport transport = toGmail.getTransport();
