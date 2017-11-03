@@ -137,9 +137,7 @@ public class CustomerView implements Serializable {
         }
 
         storeShoppingCart(customer);
-        
-        sendEmailToCustomer(customer);
-        
+              
         sendOrderToWarehouse();
         
         shoppingView.calculateFullAmmount();
@@ -164,9 +162,9 @@ public class CustomerView implements Serializable {
         }
     }
     
-    private void sendEmailToCustomer(Customer c){
+    private void sendEmailToCustomer(Customer c, List<ShoppingCartItem> shoppingCart, Order order){
         try {
-            emailBean.sendEmail(c);
+            emailBean.sendEmail(c,shoppingCart,order);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -196,6 +194,8 @@ public class CustomerView implements Serializable {
                 shoppingBean.addFruitCart(cart);
             }
         }
+        
+        sendEmailToCustomer(c,shoppingCart,order);
     }
 
     public String checkCustomer() {
