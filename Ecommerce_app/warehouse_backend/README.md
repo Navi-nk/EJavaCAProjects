@@ -1,4 +1,4 @@
-E-commerce Warehouse BackEnd
+E-Commerce Warehouse BackEnd
 ----------------------------
 
 This application is built using the provided [project template](https://github.com/chukmunnlee/ejava2017_ca1). The template consists of the angular web front end and we were instructed to create backend components to populate the provided view.
@@ -19,13 +19,13 @@ Once the project is setup and ran in netbeans, the subsequent webpage launched w
 #### Features implemented in the application ####
 
 
-1. The below diagram shows the ER diagram of the tables used for persistance in the application.
+1. The below diagram shows the ER diagram of the entities used for persistance in the application.
 <p align="center">
   <img src="db_model/ER_diagram.png" alt="ER diagram"/>
 </p>  
 These two tables are used to store the incoming order details and are created to match the schema of received JSON object.
 
-2. The incoming messages are read by the MDB(***WarehouseBean.java***) and sent to the websocket class (***WarehouseWS.java***) via injected Event class. The websocket class implements a method which uses the ***@Observes*** annotation to listen for the event fired from MDB - The event contains the received order messages. A application scoped session handler is created to store the created sessions and to make sure the event handling can access the connected sessions in order to broadcast the messages. 
+2. The incoming messages are read by the MDB -***WarehouseBean.java*** and sent to the websocket class -***WarehouseWS.java*** via injected Event class. The websocket class implements a method which uses the ***@Observes*** annotation to listen for the event fired from MDB - The event contains the received order messages. A application scoped session handler is created to store the created sessions and to make sure the event handling can access the connected sessions in order to broadcast the messages. 
 
 3. The earlier mentioned two url schemes are used to provide an option to the user of either viewing the order history along with the incoming messages or to view only current messages.
 
