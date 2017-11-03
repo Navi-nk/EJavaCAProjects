@@ -20,4 +20,4 @@ Please go through the readme files of respective project for their detailed desc
 * Sarita Sethy
 
 
->Note:- The applications are best viewed in latest version of Google Chrome and Mozilla Firefox.
+>Note:- Both the applications are best viewed in latest version of Google Chrome and Mozilla Firefox.
