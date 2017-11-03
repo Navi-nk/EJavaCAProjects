@@ -22,6 +22,9 @@ __Prerequistes for running the application__
 <p align="center">
   <img src="db_model/ER_diagram.png" alt="ER diagram"/>
 </p>
+
 2. The Customer uses the shopping view to browse the fruit catalog and add desired items into the cart by providing quantity required. The customer can remove the selected item from the cart or can increase the quantity of the already selected item. 
+
 3. Once the customer checks out then he/she will be taken to check out page where their personal details are to be submitted. If this customer's details is already stored in the database, then once the name field is filled the remaining fields are auto populated. After the all the details are provided and submitted, the customer is taken to thank you page where the placed order details are shown.
+
 4. When the customer details are submitted, the order details are sent to the warehouse backend via the configured JMS queue and at the same time it is sent to the customer via email. 

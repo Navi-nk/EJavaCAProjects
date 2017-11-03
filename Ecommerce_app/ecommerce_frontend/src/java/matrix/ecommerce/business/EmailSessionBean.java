@@ -32,21 +32,20 @@ public class EmailSessionBean {
     
     @Resource (lookup="mail/shoppingcart")
     private Session toGmail; 
-    private Customer toCustomer;
+    //private Customer toCustomer;
     private List<ShoppingCartItem> currentCart;
     private Order newOrder;
         
     public void sendEmail(Customer c, List<ShoppingCartItem> shoppingCart, Order order) throws Exception {
         
         try {
-            toCustomer = c;
             currentCart = shoppingCart;
             newOrder = order;
             toGmail.setDebug(true);
             System.out.println(">> after add");
             Message message = new MimeMessage(toGmail);
             message.setSubject("FruitMart Order Summary for Order No: " + newOrder.getId() );
-            message.setRecipient(Message.RecipientType.TO , new InternetAddress(toCustomer.getEmail(),toCustomer.getName()));
+            message.setRecipient(Message.RecipientType.TO , new InternetAddress(c.getEmail(),c.getName()));
             
             StringBuilder content = new StringBuilder();
             content.append( 
@@ -59,14 +58,14 @@ public class EmailSessionBean {
                         "</style>" +
                         "</head>" +
                         "<h2 class=\"blue\">" + "Order Summary for OrderNo " + newOrder.getId() + " dated " + newOrder.getCreatedDate() + "</h2>" +
-                        "<p>" + "Dear <em>" + toCustomer.getName() + "</em>," + "</p>" +
+                        "<p>" + "Dear <em>" + c.getName() + "</em>," + "</p>" +
                         "<p>Thanks for Shopping with us. Please find below a summary of your order.</p>" +
                         "<table class=\"GeneratedTable\">" +
                         "<tr align=\"center\" bgcolor=\"#F77F4E\" multiple><th>" + "Order Details" + "</th></tr>" +
-                        "<tr>" + "<p>Name: " + toCustomer.getName() + "</p>" +
-                                 "<p>Address: " + toCustomer.getAddress() + "</p>" +
-                                 "<p>Contact: " + toCustomer.getPhone() + "</p>" +
-                                 "<p>Email: " + toCustomer.getEmail() + "</p>" +
+                        "<tr>" + "<p>Name: " + c.getName() + "</p>" +
+                                 "<p>Address: " + c.getAddress() + "</p>" +
+                                 "<p>Contact: " + c.getPhone() + "</p>" +
+                                 "<p>Email: " + c.getEmail() + "</p>" +
                                  "<p>Comments: " + newOrder.getComments() + "</p>" + "</tr>" +
                         "<tr><table class=\"GeneratedTable\">" +
                         "<tr align=\"center\" bgcolor=\"#EBEBE9\" multiple><th>Name</th><th>Price</th><th>Quantity</th><th>Cost</th></tr>");
@@ -74,10 +73,10 @@ public class EmailSessionBean {
             for (ShoppingCartItem item : currentCart) {
                 
                 content.append("<tr>");
-                content.append("<td>" + item.getFruit().getName() + "</td>");
-                content.append("<td>" + item.getFruit().getPrice() + "</td>");
-                content.append("<td>" + item.getSelectedQuantity() + "</td>");
-                content.append("<td>" + item.getCost() + "</td>");
+                content.append("<td>").append(item.getFruit().getName()).append("</td>");
+                content.append("<td>").append(item.getFruit().getPrice()).append("</td>");
+                content.append("<td>").append(item.getSelectedQuantity()).append("</td>");
+                content.append("<td>").append(item.getCost()).append("</td>");
                 content.append("</tr>");
                 
             }
