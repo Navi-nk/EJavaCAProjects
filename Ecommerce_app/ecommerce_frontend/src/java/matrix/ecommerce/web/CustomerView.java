@@ -62,7 +62,6 @@ public class CustomerView implements Serializable {
 
     @PostConstruct
     private void init() {
-        System.out.println(">> Creating Customer view");
     }
 
     @PreDestroy
@@ -179,7 +178,6 @@ public class CustomerView implements Serializable {
             for (ShoppingCartItem cart : shoppingCart) {
                 totalCost = totalCost + cart.getCost();
             }
-            //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
             order.setComments(comments);
             order.setTotalCost(totalCost);
