@@ -12,13 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -27,13 +24,6 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "orders")
-@XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Order.findAll", query = "SELECT o FROM Order o")
-    , @NamedQuery(name = "Order.findById", query = "SELECT o FROM Order o WHERE o.id = :id")
-    , @NamedQuery(name = "Order.findByCreatedDate", query = "SELECT o FROM Order o WHERE o.createdDate = :createdDate")
-    , @NamedQuery(name = "Order.findByComments", query = "SELECT o FROM Order o WHERE o.comments = :comments")
-    , @NamedQuery(name = "Order.findByTotalCost", query = "SELECT o FROM Order o WHERE o.totalCost = :totalCost")})
 public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,11 +42,11 @@ public class Order implements Serializable {
     @Basic(optional = false)
     @Column(name = "total_cost")
     private float totalCost;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private Collection<ShoppingCartItem> shoppingCartItemsCollection;
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Customer customerId;
+    private Customer customer;
    
 
     public Integer getId() {
@@ -100,13 +90,14 @@ public class Order implements Serializable {
         this.shoppingCartItemsCollection = shoppingCartItemsCollection;
     }
 
-    public Customer getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
+    }
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public void setCustomerId(Customer customerId) {
-        this.customerId = customerId;
-    }
+   
 
     @Override
     public int hashCode() {

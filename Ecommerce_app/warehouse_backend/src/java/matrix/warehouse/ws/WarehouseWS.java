@@ -1,8 +1,3 @@
-/*
-     * To change this license header, choose License Headers in Project Properties.
-     * To change this template file, choose Tools | Templates
-     * and open the template in the editor.
- */
 package matrix.warehouse.ws;
 
 import java.io.StringReader;
@@ -56,7 +51,6 @@ public class WarehouseWS {
                 for (Order o : orders) {
 
                     for (Session s : session.getOpenSessions()) {
-                        System.out.println("matrix.warehouse.ws.WarehouseWS.open()");
                         s.getBasicRemote().sendObject(o.toJson());
                     }
                 }
@@ -83,8 +77,6 @@ public class WarehouseWS {
     }
 
     public void observeEvent(@Observes String message) {
-        System.out.println("inside observer");
-        System.out.println(message);
         try {
             JsonObject object;
             try (JsonReader jsonReader = Json.createReader(new StringReader(message))) {

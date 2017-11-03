@@ -1,0 +1,8 @@
+**/dist/*
+**/class/*
+**/nbproject/private/*
+/ecommerce_frontend/nbproject/private/
+/warehouse_backend/nbproject/private/
+/ecommerce_frontend/dist/
+/warehouse_backend/dist/
+/ecommerce_frontend/build/

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package matrix.warehouse.model;
 
 import java.io.Serializable;
@@ -102,7 +97,6 @@ public class Order implements Serializable {
             arrayBuilder.add(b);
         });
         JsonObject obj = builder.add("cart", arrayBuilder).build();
-        System.out.println(obj.toString());
         return obj;
     }
 

@@ -3,78 +3,78 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"> 
 
-<h:head>
+    <h:head>
 
-</h:head> 
-<h:body> 
- <h2>Check Out</h2>
- <p:separator />
- <h:form id="qform">
-  <p:fieldset legend="Registration Form" widgetVar="regWidget" style="width: 600px;">
-   <h:panelGrid columns="3" width="700" border="0">
-    
-    <h:outputLabel value="Name" />
-    <p:inputText value="#{customerView.name}" 
-       id="name"
-       required="true" 
-       requiredMessage="Name is required" 
-       >
-        <p:ajax event="keyup" update="qform" listener="#{customerView.checkCustomer}" />
-    </p:inputText>
-   
-    <p:message for="name"/>
-    
-    
-    <h:outputLabel value="Address" />
-    <p:inputText value="#{customerView.address}"
-       id="address"
-       required="true" 
-       requiredMessage="Address is required">
-     </p:inputText>
-     <p:message for="address" />
-    
-    <h:outputLabel value="Phone" />
-    <p:inputText value="#{customerView.phone}"
-       id="phone"
-       required="true" 
-       requiredMessage="Phone No is required"
-       validatorMessage="Phone No should be of 8 digits">
-      <f:validateLength minimum="8" maximum="8" for="phone"></f:validateLength>
-    </p:inputText>
-    <p:message for="phone" />
-    <h:outputLabel value="Email" />
-    <p:inputText id="email" 
-                 required="true" 
-                 label="email" 
-                 size="40"
-                 requiredMessage="Please enter your email address."
-		 validatorMessage="Invalid email format"
-                 value="#{customerView.email}">
+    </h:head> 
+    <h:body styleClass="backGround"> 
+        <h2 align="center">Check Out</h2>
+        <link rel="stylesheet" href="main.css"/>
+        <p:separator />
+        
+            <h:form id="qform">
+                <p:fieldset legend="Customer Information" widgetVar="regWidget" styleClass="custInfo">
+                    <h:panelGrid columns="3" style="width:fit-content" border="0">
 
-	  <f:validateRegex
-		pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                        <h:outputLabel value="Name" />
+                        <p:inputText value="#{customerView.name}" 
+                                     id="name"
+                                     required="true" 
+                                     requiredMessage="Name is required" 
+                                     >
+                            <p:ajax event="blur" update="qform" listener="#{customerView.checkCustomer}" />
+                        </p:inputText>
 
-	</p:inputText>
-	<p:message for="email" />
-       
-    
+                        <p:message for="name"/>
+
+
+                        <h:outputLabel value="Address" />
+                        <p:inputText value="#{customerView.address}"
+                                     id="address"
+                                     required="true" 
+                                     requiredMessage="Address is required">
+                        </p:inputText>
+                        <p:message for="address" />
+
+                        <h:outputLabel value="Phone" />
+                        <p:inputText value="#{customerView.phone}"
+                                     id="phone"
+                                     required="true" 
+                                     requiredMessage="Phone No is required"
+                                     validatorMessage="Phone No should be of 8 digits">
+                            <f:validateLength minimum="8" maximum="8" for="phone"></f:validateLength>
+                        </p:inputText>
+                        <p:message for="phone" />
+                        <h:outputLabel value="Email" />
+                        <p:inputText id="email" 
+                                     required="true" 
+                                     label="email" 
+                                     size="40"
+                                     requiredMessage="Please enter your email address."
+                                     validatorMessage="Invalid email format"
+                                     value="#{customerView.email}">
+
+                            <f:validateRegex
+                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                        </p:inputText>
+                        <p:message for="email" />
+
+
+
+                        <h:outputLabel value="Comments" />    
+                        <p:inputTextarea value="#{customerView.comments}" id="comments" rows="4" maxlength="300" cols="45">     
+                        </p:inputTextarea>
+                        <p:message for="comments" />         
+                        <p:commandButton value="Submit" action="#{customerView.addCustomer()}" ajax="false"></p:commandButton>
+
+                    </h:panelGrid>
+                </p:fieldset>
+
+            </h:form>
+            <h:form>
+                <p:commandButton value="Continue Shopping" action="#{customerView.continueShopping()}" ajax="false" styleClass="ui-priority-primary" style="margin-left: 45%" />
+            </h:form>
       
-    <h:outputLabel value="Comments" />    
-    <p:inputTextarea value="#{customerView.comments}" id="comments" rows="4" maxlength="300" cols="45">     
-    </p:inputTextarea>
-    <p:message for="comments" />    
-       
-    <p:commandButton value="Register" action="#{customerView.addCustomer()}" ajax="false"></p:commandButton>
-    
-   </h:panelGrid>
-  </p:fieldset>
-     
- </h:form>
- <h:form>
-     <p:commandButton value="Continue Shopping" action="#{customerView.continueShopping()}" ajax="false" styleClass="ui-priority-primary" style="margin-left: 45%" />
- </h:form>
- 
-</h:body>   
-   
+    </h:body>   
 
 </html>

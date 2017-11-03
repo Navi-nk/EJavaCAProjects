@@ -7,8 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jms.ConnectionFactory;
@@ -20,7 +20,6 @@ import javax.jms.TextMessage;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
-import javax.servlet.http.HttpSession;
 import matrix.ecommerce.business.CustomerBean;
 import matrix.ecommerce.business.EmailSessionBean;
 import matrix.ecommerce.business.ShoppingBean;
@@ -33,7 +32,7 @@ import matrix.ecommerce.model.ShoppingCartItem;
  * @author Sarita Sethy
  */
 
-@SessionScoped
+@ViewScoped
 @Named
 public class CustomerView implements Serializable {
 
@@ -48,7 +47,7 @@ public class CustomerView implements Serializable {
     @EJB
     private EmailSessionBean emailBean;
 
-    @Resource(lookup = "jms/factory")
+    @Resource(lookup = "jms/connectionFactory")
     private ConnectionFactory connectionFactory;
 
     @Resource(lookup = "jms/warehouse")
@@ -63,12 +62,13 @@ public class CustomerView implements Serializable {
 
     @PostConstruct
     private void init() {
-        System.out.println(">> Creating Customer");
     }
 
     @PreDestroy
     private void destroy() {
-        System.out.println(">> Destroying Customer Details");
+        Customer c = new Customer(id, name, email, phone, address);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("customer", c);
+        System.out.println(">> Destroying Customer view");
     }
 
     public Integer getId() {
@@ -136,9 +136,7 @@ public class CustomerView implements Serializable {
         }
 
         storeShoppingCart(customer);
-        
-        sendEmailToCustomer(customer);
-        
+              
         sendOrderToWarehouse();
         
         shoppingView.calculateFullAmmount();
@@ -163,9 +161,9 @@ public class CustomerView implements Serializable {
         }
     }
     
-    private void sendEmailToCustomer(Customer c){
+    private void sendEmailToCustomer(Customer c, List<ShoppingCartItem> shoppingCart, Order order){
         try {
-            emailBean.sendEmail();
+            emailBean.sendEmail(c,shoppingCart,order);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -180,21 +178,22 @@ public class CustomerView implements Serializable {
             for (ShoppingCartItem cart : shoppingCart) {
                 totalCost = totalCost + cart.getCost();
             }
-            //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
             order.setComments(comments);
             order.setTotalCost(totalCost);
             order.setCreatedDate(date);
-            order.setCustomerId(c);
+            order.setCustomer(c);
             shoppingBean.addCart(order);
         }
 
         if (shoppingCart.size() > 0) {
             for (ShoppingCartItem cart : shoppingCart) {
-                cart.setOrderId(order);
+                cart.setOrder(order);
                 shoppingBean.addFruitCart(cart);
             }
         }
+        
+        sendEmailToCustomer(c,shoppingCart,order);
     }
 
     public String checkCustomer() {
@@ -207,20 +206,15 @@ public class CustomerView implements Serializable {
                 this.setPhone(existCustomer.getPhone());
                 this.setEmail(existCustomer.getEmail());
                 this.setId(existCustomer.getId());
-
+            }
+            else{
+                this.setAddress(null);
+                this.setPhone(null);
+                this.setEmail(null);
+                this.setId(null);
             }
         }
         return "checkout";
-    }
-
-    public String endSession() {
-        
-        HttpSession sess = (HttpSession) FacesContext.getCurrentInstance().
-                getExternalContext().getSession(false);
-
-        sess.invalidate();
-
-        return ("welcome?faces-redirect=true");
     }
 
     public String continueShopping() {
@@ -239,7 +233,7 @@ public class CustomerView implements Serializable {
 
             shoppingCart.forEach(items -> {
                 arrayBuilder.add(Json.createObjectBuilder()
-                        .add("item", items.getFruitId().getName())
+                        .add("item", items.getFruit().getName())
                         .add("quantity", items.getSelectedQuantity()));
             });
 

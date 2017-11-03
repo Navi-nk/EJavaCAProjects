@@ -50,7 +50,7 @@
                          <h:panelGrid columns="2" cellpadding="5" >
                              
                              <h:outputText value="Name:" />
-                             <h:outputText value="#{items.fruitId.name}" />
+                             <h:outputText value="#{items.fruit.name}" />
                              <h:outputText value="Quantity:" />
                              <h:outputText value="#{items.selectedQuantity}"/>
                              <h:outputText value="Total Cost:" />
@@ -58,7 +58,7 @@
                              
                          </h:panelGrid> 
                          <h:commandButton value="Remove" action="#{shoppingView.removeItem()}" style="margin-left: 35%; margin-top: 2%">
-                             <f:param name="selected_fruit_id" value="#{items.fruitId.id}" />
+                             <f:param name="selected_fruit_id" value="#{items.fruit.id}" />
                          </h:commandButton>
                      </p:panel>
                  </c:forEach>

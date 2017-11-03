@@ -8,7 +8,7 @@
         <title>E-Commerce Application - Fruit Mart</title>
         <link rel="stylesheet" href="main.css"/>
     </h:head>
-    <h:body styleClass="welcome">
+    <h:body styleClass="backGround">
         <h:form>
             <h1 align="center">Thank You for the Purchase at Fruit Mart</h1>
             <p:separator />
@@ -37,23 +37,22 @@
 
                         <h:panelGrid columns="2" cellpadding="5" styleClass="panelGridCust" >            
                             <h:outputText value="Name:" /> 
-                            <h:outputText value="#{customerView.name}"/>
+                            <h:outputText value="#{thankyouView.customer.name}"/>
                             <h:outputText value="Address:" /> 
-                            <h:outputText value="#{customerView.address}" /> 
+                            <h:outputText value="#{thankyouView.customer.address}" /> 
                             <h:outputText value="Contact:" /> 
-                            <h:outputText value="#{customerView.phone}" />
+                            <h:outputText value="#{thankyouView.customer.phone}" />
                             <h:outputText value="Email:" /> 
-                            <h:outputText value="#{customerView.email}" />
-
+                            <h:outputText value="#{thankyouView.customer.email}" />
                         </h:panelGrid >
                     </p:panel>
                     <p:dataTable var="item" value="#{shoppingView.shoppingCartItems}">
                         <p:column headerText="Name">
-                            <h:outputText value="#{item.fruitId.name}" />
+                            <h:outputText value="#{item.fruit.name}" />
                         </p:column>
 
                         <p:column headerText="Price">
-                            <h:outputText value="#{item.fruitId.price}" />
+                            <h:outputText value="#{item.fruit.price}" />
                         </p:column>
 
                         <p:column headerText="Quantity">
@@ -69,7 +68,7 @@
                         <h:panelGrid columns="2" cellpadding="5" styleClass="panelGridCost"  >            
                             <h:outputText value="Total Amount" /> 
                             <h:outputText value="#{shoppingView.fullAmount} SGD"/>
-                            
+
                         </h:panelGrid>
                     </p:panel>
                 </p:layoutUnit>
@@ -77,7 +76,7 @@
 
         </div>
         <h:form>
-            <p:commandButton value="Back to Home" id="BackHome" action="#{customerView.endSession()}" styleClass="ui-priority-primary" style="margin-left: 45%" />
+            <p:commandButton value="Back to Home" id="BackHome" action="#{thankyouView.endSession()}" styleClass="ui-priority-primary" style="margin-left: 45%" />
         </h:form>
     </h:body>
 </html>

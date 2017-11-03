@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package matrix.warehouse.business;
 
 import javax.ejb.ActivationConfigProperty;
@@ -38,10 +34,8 @@ public class WarehouseBean implements MessageListener {
     @Override
     public void onMessage(Message message) {
         TextMessage txtMsg = (TextMessage) message;
-        System.out.println("inside jms");
         try {
             String msg = txtMsg.getText();
-            System.out.println("\t" + msg);
             jmsEvent.fire(txtMsg.getText());
             orderBean.persistOrder(msg);
 
