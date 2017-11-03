@@ -32,7 +32,7 @@ SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `fruitmart`.`customer` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `address` VARCHAR(45) NULL DEFAULT NULL,
+  `address` VARCHAR(100) NULL DEFAULT NULL,
   `phone` VARCHAR(45) NULL DEFAULT NULL,
   `email` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
@@ -92,13 +92,13 @@ SHOW WARNINGS;
 -- -----------------------------------------------------
 -- Table `fruitmart`.`order`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fruitmart`.`order` ;
+DROP TABLE IF EXISTS `fruitmart`.`orders` ;
 
 SHOW WARNINGS;
-CREATE TABLE IF NOT EXISTS `fruitmart`.`order` (
+CREATE TABLE IF NOT EXISTS `fruitmart`.`orders` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `created_date` DATETIME NOT NULL,
-  `comments` VARCHAR(45) NULL DEFAULT NULL,
+  `comments` VARCHAR(1000) NULL DEFAULT NULL,
   `total_cost` FLOAT NOT NULL,
   `customer_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -111,7 +111,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 SHOW WARNINGS;
-CREATE INDEX `fk_order_customer1_idx` ON `fruitmart`.`order` (`customer_id` ASC);
+CREATE INDEX `fk_order_customer1_idx` ON `fruitmart`.`orders` (`customer_id` ASC);
 
 SHOW WARNINGS;
 
@@ -122,7 +122,7 @@ DROP TABLE IF EXISTS `fruitmart`.`shopping_cart_items` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `fruitmart`.`shopping_cart_items` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `selected_quantity` INT NOT NULL,
   `cost` FLOAT NOT NULL,
   `order_id` INT(11) NOT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `fruitmart`.`shopping_cart_items` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_shopping_cart_orders1`
     FOREIGN KEY (`order_id`)
-    REFERENCES `fruitmart`.`order` (`id`)
+    REFERENCES `fruitmart`.`orders` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_shopping_cart_items_fruit1`

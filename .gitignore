@@ -1,8 +1,0 @@
-**/dist/*
-**/class/*
-**/nbproject/private/*
-/Ecommerce_app/ecommerce_frontend/nbproject/private/
-/Ecommerce_app/warehouse_backend/nbproject/private/
-/Ecommerce_app/ecommerce_frontend/dist/
-/Ecommerce_app/warehouse_backend/dist/
-/Ecommerce_app/ecommerce_frontend/build/

@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package matrix.ecommerce.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.CollectionTable;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,45 +16,43 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Sarita
  */
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    @Id @GeneratedValue(strategy=IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-    @Column(name = "total_cost")
-    private float totalCost;
     @Column(name = "comments")
     private String comments;
-    
-    @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")	
+    @Basic(optional = false)
+    @Column(name = "total_cost")
+    private float totalCost;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    private Collection<ShoppingCartItem> shoppingCartItemsCollection;
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
     private Customer customer;
-    
-    @ElementCollection
-    @CollectionTable(joinColumns=@JoinColumn(name="order_id"))
-    private List<ShoppingCartItem> shoppingCartItems;
-    
-    public Order() {
-    }
-
-    public Order(Integer id) {
-        this.id = id;
-    }
+   
 
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -67,14 +60,15 @@ public class Order implements Serializable {
     public Date getCreatedDate() {
         return createdDate;
     }
+
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
-
     public String getComments() {
         return comments;
     }
+
     public void setComments(String comments) {
         this.comments = comments;
     }
@@ -82,8 +76,18 @@ public class Order implements Serializable {
     public float getTotalCost() {
         return totalCost;
     }
+
     public void setTotalCost(float totalCost) {
         this.totalCost = totalCost;
+    }
+
+    @XmlTransient
+    public Collection<ShoppingCartItem> getShoppingCartItemsCollection() {
+        return shoppingCartItemsCollection;
+    }
+
+    public void setShoppingCartItemsCollection(Collection<ShoppingCartItem> shoppingCartItemsCollection) {
+        this.shoppingCartItemsCollection = shoppingCartItemsCollection;
     }
 
     public Customer getCustomer() {
@@ -93,14 +97,7 @@ public class Order implements Serializable {
         this.customer = customer;
     }
 
-    public List<ShoppingCartItem> getShoppingCartItems() {
-        return shoppingCartItems;
-    }
-    public void setShoppingCartItems(List<ShoppingCartItem> shoppingCartItems) {
-        this.shoppingCartItems = shoppingCartItems;
-    }
-    
-    
+   
 
     @Override
     public int hashCode() {
@@ -124,7 +121,7 @@ public class Order implements Serializable {
 
     @Override
     public String toString() {
-        return "matrix.ecommerce.business.ShoppingCart[ id=" + id + " ]";
+        return "matrix.ecommerce.model.Order[ id=" + id + " ]";
     }
     
 }

@@ -19,7 +19,7 @@
                 <c:forEach items="#{shoppingView.fruits}" var="fruit">
                      <p:panel>
                         <h:panelGrid columns="2" >
-                            <p:graphicImage value="#{fruit.image_uri}" />
+                            <p:graphicImage value="#{fruit.imageUri}" />
                             <h:panelGrid columns="2" cellpadding="5" >
                                
                                 <h:outputText value="Name:" />
@@ -57,7 +57,9 @@
                              <h:outputText value="#{items.cost} SGD"/>
                              
                          </h:panelGrid> 
-                         <h:commandButton value="Remove" action="#{shoppingView.removeItem(items.fruit)}" style="margin-left: 35%; margin-top: 2%"/>
+                         <h:commandButton value="Remove" action="#{shoppingView.removeItem()}" style="margin-left: 35%; margin-top: 2%">
+                             <f:param name="selected_fruit_id" value="#{items.fruit.id}" />
+                         </h:commandButton>
                      </p:panel>
                  </c:forEach>
                  <h:commandButton value="Check Out" id="checkout" action="#{shoppingView.checkOut()}" rendered="#{shoppingView.shoppingCartItems.size() > 0}" style="margin-left: 35%; margin-top: 2%"/>

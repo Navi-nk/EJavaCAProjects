@@ -1,63 +1,95 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package matrix.warehouse.ws;
 
 import java.io.StringReader;
-import java.util.Date;
+import java.util.List;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import javax.ws.rs.DefaultValue;
+import matrix.warehouse.business.OrderBean;
+import matrix.warehouse.model.Order;
 
 /**
  *
- * @author Navi-PC
+ * @author Navi
  */
 @RequestScoped
-@ServerEndpoint("/orders")
+@ServerEndpoint("/orders/{history}")
 public class WarehouseWS {
-    private Session session;
 
-	@OnMessage
-	public void message(String message) {
-		System.out.println(">>>>message = " + message);
-	}
+    @Inject
+    private SessionHandler sessionHandler;
+    @EJB
+    private OrderBean orderBean;
 
-	@OnOpen
-	public void open(Session sess) {
-		session = sess;
-		System.out.println(">>>connection opened: " + session.getId());
-	}
+    @OnMessage
+    public void message(String message) {
+        System.out.println("message received = " + message);
 
-	@OnClose
-	public void close(CloseReason reason) {
-		System.out.println(">>> connection closing: " + session.getId());
-		System.out.println("\treason = " + reason.toString());
-	}
-        
-        public void observeEvent(@Observes String message){
-            System.out.println("inside observer");
-            System.out.println(message);
+    }
+
+    @OnOpen
+    public void open(Session session,
+            @DefaultValue("false") @PathParam("history") Boolean isHistory) {
+        sessionHandler.addSession(session);
+        System.out.println("connection opened: " + session.getId() + " " + isHistory);
+        if (isHistory) {
+            List<Order> orders = orderBean.getAllOrder();
+
             try {
-                JsonReader jsonReader = Json.createReader(new StringReader(message));
-                JsonObject object = jsonReader.readObject();
-                jsonReader.close();
-			for (Session s: session.getOpenSessions())
-				s.getBasicRemote().sendObject(object);
-		} catch (Throwable t) {
-			t.printStackTrace();
-			try { session.close(); } catch (Throwable tt) { }
-		}
-        }        
-        
+                for (Order o : orders) {
+
+                    for (Session s : session.getOpenSessions()) {
+                        s.getBasicRemote().sendObject(o.toJson());
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+                try {
+                    session.close();
+                } catch (Throwable tt) {
+                }
+            }
+        }
+    }
+
+    @OnClose
+    public void close(Session session) {
+        System.out.println("connection closed: " + session.getId());
+        sessionHandler.removeSession(session);
+    }
+
+    @OnError
+    public void onError(Throwable t) {
+        t.printStackTrace();
+        sessionHandler.closeAllSessions();
+    }
+
+    public void observeEvent(@Observes String message) {
+        try {
+            JsonObject object;
+            try (JsonReader jsonReader = Json.createReader(new StringReader(message))) {
+                object = jsonReader.readObject();
+            }
+
+            for (Session s : sessionHandler.getSessions()) {
+                s.getBasicRemote().sendObject(object);
+            }
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+            sessionHandler.closeAllSessions();
+        }
+    }
 }

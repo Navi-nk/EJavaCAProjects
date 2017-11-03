@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package matrix.ecommerce.model;
 
 import java.io.Serializable;
+import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -27,86 +22,90 @@ public class ShoppingCartItem implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
-    private Long id;
-    //protected ShoppingCartPK shoppingCartPK;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     
-    @Column(name = "cost")
-    private Float cost;
+    @Basic(optional = false)
     @Column(name = "selected_quantity")
-    private Integer selectedQuantity;
+    private int selectedQuantity;
     
-    @ManyToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id")	
-    private Order order;
+    @Basic(optional = false)
+    @Column(name = "cost")
+    private float cost;
     
-    @ManyToOne
-    @JoinColumn(name = "fruit_id", referencedColumnName = "id")	
+    @JoinColumn(name = "fruit_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
     private Fruit fruit;
     
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Order order;
+
     public ShoppingCartItem() {
     }
 
-    public ShoppingCartItem(Float cost, Integer selectedQuantity) {
-        this.cost = cost;
-        this.selectedQuantity = selectedQuantity;
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
+    public ShoppingCartItem(Integer id) {
         this.id = id;
     }
+
+    public ShoppingCartItem(Integer id, int selectedQuantity, float cost) {
+        this.id = id;
+        this.selectedQuantity = selectedQuantity;
+        this.cost = cost;
+    }
     
+     public ShoppingCartItem(Float cost, Integer selectedQuantity) {
+        this.cost = cost;
+        this.selectedQuantity = selectedQuantity;
 
-   /* public ShoppingCartItem(ShoppingCartPK shoppingCartPK) {
-        this.shoppingCartPK = shoppingCartPK;
-    }
-    public ShoppingCartItem(int fruitId, int shoppingcartId) {
-        this.shoppingCartPK = new ShoppingCartPK(fruitId, shoppingcartId);
     }
 
-    public ShoppingCartPK getShoppingCartPK() {
-        return shoppingCartPK;
+    public Integer getId() {
+        return id;
     }
-    public void setShoppingCartPK(ShoppingCartPK shoppingCartPK) {
-        this.shoppingCartPK = shoppingCartPK;
-    }*/
 
-    public Order getOrder() {
-        return order;
+    public void setId(Integer id) {
+        this.id = id;
     }
-    public void setOrder(Order order) {
-        this.order = order;
+
+    public int getSelectedQuantity() {
+        return selectedQuantity;
+    }
+
+    public void setSelectedQuantity(int selectedQuantity) {
+        this.selectedQuantity += selectedQuantity;
+    }
+
+    public float getCost() {
+        return cost;
+    }
+
+    public void setCost(float cost) {
+        this.cost = cost;
     }
 
     public Fruit getFruit() {
         return fruit;
     }
+
     public void setFruit(Fruit fruit) {
         this.fruit = fruit;
     }
 
-    public Float getCost() {
-        return cost;
-    }
-    public void setCost(Float cost) {
-        this.cost = cost;
+    public Order getOrder() {
+        return order;
     }
 
-    public Integer getSelectedQuantity() {
-        return selectedQuantity;
+    public void setOrder(Order order) {
+        this.order = order;
     }
-    public void setSelectedQuantity(Integer selectedQuantity) {
-        this.selectedQuantity = selectedQuantity;
-    }
-    
-    
 
-  /*  @Override
+    @Override
     public int hashCode() {
         int hash = 0;
-        hash += (shoppingCartPK != null ? shoppingCartPK.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -117,18 +116,15 @@ public class ShoppingCartItem implements Serializable {
             return false;
         }
         ShoppingCartItem other = (ShoppingCartItem) object;
-        if ((this.shoppingCartPK == null && other.shoppingCartPK != null) || (this.shoppingCartPK != null && !this.shoppingCartPK.equals(other.shoppingCartPK))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
+
     @Override
     public String toString() {
-        return "matrix.ecommerce.business.FruitCart[ fruitCartPK=" + shoppingCartPK + " ]";
-    }
-*/
-    public void increaseQuantity(Integer selectedQuantity) {
-        this.selectedQuantity += selectedQuantity;
+        return "matrix.ecommerce.model.ShoppingCartItem[ id=" + id + " ]";
     }
     
 }

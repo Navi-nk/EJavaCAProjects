@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package matrix.ecommerce.business;
 
-import java.io.Serializable;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -24,7 +18,7 @@ public class FruitBean {
 
 	public List<Fruit> getAllFruits() {
 
-		TypedQuery<Fruit> query = em.createQuery("select f from Fruit f", Fruit.class);
+		TypedQuery<Fruit> query = em.createNamedQuery("Fruit.findAll",Fruit.class);
 		return (query.getResultList());
 	}	
 }

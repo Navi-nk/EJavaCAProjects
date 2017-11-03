@@ -1,13 +1,20 @@
 package matrix.ecommerce.model;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -15,61 +22,118 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "fruit")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Fruit.findAll", query = "SELECT f FROM Fruit f")
+    })
 public class Fruit implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Basic(optional = false)
+    @Column(name = "name")
     private String name;
+    @Basic(optional = false)
+    @Column(name = "price")
+    private float price;
+    @Column(name = "description")
     private String description;
-    private Float price;
-    private String image_uri;
-    
-    @OneToMany(mappedBy = "fruit")
-    private List<ShoppingCartItem> shoppingCartItems;
+    @Basic(optional = false)
+    @Column(name = "image_uri")
+    private String imageUri;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fruit")
+    private Collection<ShoppingCartItem> shoppingCartItemsCollection;
 
-    public Long getId() {
-        return id;
+    public Fruit() {
     }
-    public void setId(Long id) {
+
+    public Fruit(Integer id) {
         this.id = id;
     }
-    
-     public String getName() {
+
+    public Fruit(Integer id, String name, float price, String imageUri) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUri = imageUri;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public Float getPrice() {
+    public float getPrice() {
         return price;
     }
-    public void setPrice(Float price) {
-        this.price = price;
-    }
 
-    public String getImage_uri() {
-        return image_uri;
-    }
-    public void setImage_uri(String image_uri) {
-        this.image_uri = image_uri;
+    public void setPrice(float price) {
+        this.price = price;
     }
 
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
-    }  
+    }
 
-    public List<ShoppingCartItem> getShoppingCartItem() {
-        return shoppingCartItems;
+    public String getImageUri() {
+        return imageUri;
     }
-    public void setShoppingCartItem(List<ShoppingCartItem> shoppingCartItem) {
-        this.shoppingCartItems = shoppingCartItems;
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
-    
+
+    @XmlTransient
+    public Collection<ShoppingCartItem> getShoppingCartItemsCollection() {
+        return shoppingCartItemsCollection;
+    }
+
+    public void setShoppingCartItemsCollection(Collection<ShoppingCartItem> shoppingCartItemsCollection) {
+        this.shoppingCartItemsCollection = shoppingCartItemsCollection;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Fruit)) {
+            return false;
+        }
+        Fruit other = (Fruit) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "matrix.ecommerce.model.Fruit[ id=" + id + " ]";
+    }
     
 }
