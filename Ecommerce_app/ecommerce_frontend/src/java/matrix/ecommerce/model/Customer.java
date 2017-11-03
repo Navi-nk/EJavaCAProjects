@@ -24,12 +24,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "customer")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c")
-    , @NamedQuery(name = "Customer.findById", query = "SELECT c FROM Customer c WHERE c.id = :id")
-    , @NamedQuery(name = "Customer.findByName", query = "SELECT c FROM Customer c WHERE c.name = :name")
-    , @NamedQuery(name = "Customer.findByAddress", query = "SELECT c FROM Customer c WHERE c.address = :address")
-    , @NamedQuery(name = "Customer.findByPhone", query = "SELECT c FROM Customer c WHERE c.phone = :phone")
-    , @NamedQuery(name = "Customer.findByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email")})
+     @NamedQuery(name = "Customer.findByName", query = "SELECT c FROM Customer c WHERE c.name = :name")
+    })
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,8 +44,8 @@ public class Customer implements Serializable {
     @Basic(optional = false)
     @Column(name = "email")
     private String email;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerId")
-    private Collection<Order> order1Collection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private Collection<Order> orderCollection;
 
     public Customer() {
     }
@@ -106,14 +102,14 @@ public class Customer implements Serializable {
         this.email = email;
     }
 
-    @XmlTransient
-    public Collection<Order> getOrder1Collection() {
-        return order1Collection;
+    public Collection<Order> getOrderCollection() {
+        return orderCollection;
+    }
+    public void setOrderCollection(Collection<Order> orderCollection) {
+        this.orderCollection = orderCollection;
     }
 
-    public void setOrder1Collection(Collection<Order> order1Collection) {
-        this.order1Collection = order1Collection;
-    }
+    
 
     @Override
     public int hashCode() {

@@ -62,14 +62,14 @@ public class CustomerView implements Serializable {
 
     @PostConstruct
     private void init() {
-        System.out.println(">> Creating Customer");
+        System.out.println(">> Creating Customer view");
     }
 
     @PreDestroy
     private void destroy() {
         Customer c = new Customer(id, name, email, phone, address);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("customer", c);
-        System.out.println(">> Destroying Customer Details");
+        System.out.println(">> Destroying Customer view");
     }
 
     public Integer getId() {
@@ -186,13 +186,13 @@ public class CustomerView implements Serializable {
             order.setComments(comments);
             order.setTotalCost(totalCost);
             order.setCreatedDate(date);
-            order.setCustomerId(c);
+            order.setCustomer(c);
             shoppingBean.addCart(order);
         }
 
         if (shoppingCart.size() > 0) {
             for (ShoppingCartItem cart : shoppingCart) {
-                cart.setOrderId(order);
+                cart.setOrder(order);
                 shoppingBean.addFruitCart(cart);
             }
         }
@@ -208,7 +208,12 @@ public class CustomerView implements Serializable {
                 this.setPhone(existCustomer.getPhone());
                 this.setEmail(existCustomer.getEmail());
                 this.setId(existCustomer.getId());
-
+            }
+            else{
+                this.setAddress(null);
+                this.setPhone(null);
+                this.setEmail(null);
+                this.setId(null);
             }
         }
         return "checkout";
@@ -230,7 +235,7 @@ public class CustomerView implements Serializable {
 
             shoppingCart.forEach(items -> {
                 arrayBuilder.add(Json.createObjectBuilder()
-                        .add("item", items.getFruitId().getName())
+                        .add("item", items.getFruit().getName())
                         .add("quantity", items.getSelectedQuantity()));
             });
 

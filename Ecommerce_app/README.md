@@ -18,3 +18,6 @@ Please go through the readme files of respective project for their detailed desc
 * Gautam Krishnan
 * Naval Kumar
 * Sarita Sethy
+
+
+>Note:- The applications are best viewed in latest version of Google Chrome and Mozilla Firefox.

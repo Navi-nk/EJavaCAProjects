@@ -97,7 +97,6 @@ public class Order implements Serializable {
             arrayBuilder.add(b);
         });
         JsonObject obj = builder.add("cart", arrayBuilder).build();
-        System.out.println(obj.toString());
         return obj;
     }
 

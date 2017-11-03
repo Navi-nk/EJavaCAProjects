@@ -40,7 +40,7 @@ public class ThankyouView implements Serializable {
 
     @PreDestroy
     private void destroy() {
-        System.out.println(">> Destroying ThankyouView Details");
+        System.out.println(">> Destroying ThankyouView");
     } 
     
     public String endSession() {

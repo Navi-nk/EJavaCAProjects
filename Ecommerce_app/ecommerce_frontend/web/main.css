@@ -8,11 +8,21 @@
     text-align: center;
 }
 
-.welcome{
+.startButton{
+    margin-left: 45%;
+}
+
+.backGround{
             background-image:url(/ecommerce_frontend/resources/images/background.jpg);
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-position: initial;      
+}
+
+.custInfo{
+    width: 700px;
+    margin-left: 400px;
+    margin-top: 70px;
 }
 
 div.orderdetails{

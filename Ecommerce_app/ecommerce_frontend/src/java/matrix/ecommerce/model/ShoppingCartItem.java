@@ -9,10 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -20,13 +17,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "shopping_cart_items")
-@XmlRootElement
-
-@NamedQueries({
-    @NamedQuery(name = "ShoppingCartItem.findAll", query = "SELECT s FROM ShoppingCartItem s")
-    , @NamedQuery(name = "ShoppingCartItem.findById", query = "SELECT s FROM ShoppingCartItem s WHERE s.id = :id")
-    , @NamedQuery(name = "ShoppingCartItem.findBySelectedQuantity", query = "SELECT s FROM ShoppingCartItem s WHERE s.selectedQuantity = :selectedQuantity")
-    , @NamedQuery(name = "ShoppingCartItem.findByCost", query = "SELECT s FROM ShoppingCartItem s WHERE s.cost = :cost")})
 public class ShoppingCartItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,11 +37,11 @@ public class ShoppingCartItem implements Serializable {
     
     @JoinColumn(name = "fruit_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Fruit fruitId;
+    private Fruit fruit;
     
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Order orderId;
+    private Order order;
 
     public ShoppingCartItem() {
     }
@@ -71,8 +61,6 @@ public class ShoppingCartItem implements Serializable {
         this.selectedQuantity = selectedQuantity;
 
     }
-
-   
 
     public Integer getId() {
         return id;
@@ -98,20 +86,20 @@ public class ShoppingCartItem implements Serializable {
         this.cost = cost;
     }
 
-    public Fruit getFruitId() {
-        return fruitId;
+    public Fruit getFruit() {
+        return fruit;
     }
 
-    public void setFruitId(Fruit fruitId) {
-        this.fruitId = fruitId;
+    public void setFruit(Fruit fruit) {
+        this.fruit = fruit;
     }
 
-    public Order getOrderId() {
-        return orderId;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrderId(Order orderId) {
-        this.orderId = orderId;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -43,7 +44,13 @@ public class ShoppingView implements Serializable {
     @PostConstruct
     private void init() {
         populateView();
+        System.out.println(">> Creating ShoppingView");
     }
+
+    @PreDestroy
+    private void destroy() {
+        System.out.println(">> Destroying ShoppingView");
+    } 
 
     public List<Fruit> getFruits() {
         return fruits;
@@ -95,39 +102,31 @@ public class ShoppingView implements Serializable {
 
     public void storeSelectedFruit() {
         for (ShoppingCartItem cItem : shoppingCartItems) {
-            System.out.println(cItem.getFruitId().getName() + " " + selectedFruit.getName());
-            if ((cItem.getFruitId()).equals(selectedFruit)) {
+            
+            if ((cItem.getFruit()).equals(selectedFruit)) {
                 cartItem = cItem;
-                System.out.println("fruit found");
                 return;
             }
         }
-        System.out.println("new fruit added");
-        cartItem.setFruitId(selectedFruit);
+        
+        cartItem.setFruit(selectedFruit);
         shoppingCartItems.add(cartItem);
     }
 
     public void storeSelectedQuantity() {
-        System.out.println("inside increase");
         cartItem.setSelectedQuantity(newQuantity);
-        System.out.println(cartItem.getSelectedQuantity());
-
     }
 
     public void calculateCost() {
-        System.out.println("inside cost");
         cartItem.setCost(
                 (cartItem.getSelectedQuantity() * selectedFruit.getPrice())
         );
-        System.out.println(cartItem.getCost());
     }
 
     public void calculateFullAmmount() {
-        System.out.println("inside Full Amount");
         shoppingCartItems.forEach(item -> {
             fullAmount += item.getCost();
         });
-        System.out.println(cartItem.getCost());
     }
 
     public void populateView() {
@@ -135,16 +134,13 @@ public class ShoppingView implements Serializable {
     }
 
     public void fruitSelected() {
-        System.out.println("inside fruitSelected");
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fruit_id");
-        System.out.println("id:" + id);
 
         fruits.forEach(fruit -> {
             if (String.valueOf(fruit.getId()).equals(id)) {
                 setSelectedFruit(fruit);
             }
         });
-        System.out.println("name:" + selectedFruit.getName());
         Map<String, Object> options = new HashMap<>();
         options.put("resizable", false);
         options.put("contentHeight", 300);
@@ -155,17 +151,14 @@ public class ShoppingView implements Serializable {
     }
 
     public void removeItem() {
-        System.out.println("matrix.ecommerce.web.ShoppingView.removeItem()");
+
         String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selected_fruit_id");
-        System.out.println("id:" + id);
 
         for (Fruit f : fruits) {
             if (String.valueOf(f.getId()).equals(id)) {
                 for (Iterator<ShoppingCartItem> iter = shoppingCartItems.listIterator(); iter.hasNext(); ) { 
                     ShoppingCartItem item = iter.next();
-                    System.out.println(item.getFruitId().getName());
-                    System.out.println(f.getName());
-                    if ((item.getFruitId()).equals(f)) {
+                    if ((item.getFruit()).equals(f)) {
                         iter.remove();
                         return;
                     }
@@ -175,7 +168,6 @@ public class ShoppingView implements Serializable {
     }
 
     public void closeDialog() {
-        System.out.println("matrix.ecommerce.web.ShoppingView.addToCart()");
         RequestContext.getCurrentInstance().closeDialog(null);
     }
 
@@ -186,7 +178,6 @@ public class ShoppingView implements Serializable {
         cartItem = new ShoppingCartItem(Float.valueOf(0), 0);
         newQuantity = null;
         selectedFruit = null;
-        System.out.println("size of cart " + shoppingCartItems.size());
     }
 
     public String checkOut() {

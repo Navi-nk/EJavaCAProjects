@@ -34,10 +34,8 @@ public class WarehouseBean implements MessageListener {
     @Override
     public void onMessage(Message message) {
         TextMessage txtMsg = (TextMessage) message;
-        System.out.println("inside jms");
         try {
             String msg = txtMsg.getText();
-            System.out.println("\t" + msg);
             jmsEvent.fire(txtMsg.getText());
             orderBean.persistOrder(msg);
 

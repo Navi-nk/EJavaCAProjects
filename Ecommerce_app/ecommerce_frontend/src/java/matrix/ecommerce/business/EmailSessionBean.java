@@ -29,7 +29,6 @@ public class EmailSessionBean {
     @Resource (lookup="mail/shoppingcart")
     private Session toGmail; 
     
-    //@EJB CustomerBean cutomerBean;
     
     public void sendEmail(String email) throws Exception {
         

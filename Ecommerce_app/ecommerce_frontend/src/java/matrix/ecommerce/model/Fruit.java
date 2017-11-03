@@ -25,11 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Fruit.findAll", query = "SELECT f FROM Fruit f")
-    , @NamedQuery(name = "Fruit.findById", query = "SELECT f FROM Fruit f WHERE f.id = :id")
-    , @NamedQuery(name = "Fruit.findByName", query = "SELECT f FROM Fruit f WHERE f.name = :name")
-    , @NamedQuery(name = "Fruit.findByPrice", query = "SELECT f FROM Fruit f WHERE f.price = :price")
-    , @NamedQuery(name = "Fruit.findByDescription", query = "SELECT f FROM Fruit f WHERE f.description = :description")
-    , @NamedQuery(name = "Fruit.findByImageUri", query = "SELECT f FROM Fruit f WHERE f.imageUri = :imageUri")})
+    })
 public class Fruit implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,7 +45,7 @@ public class Fruit implements Serializable {
     @Basic(optional = false)
     @Column(name = "image_uri")
     private String imageUri;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fruitId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fruit")
     private Collection<ShoppingCartItem> shoppingCartItemsCollection;
 
     public Fruit() {
