@@ -47,7 +47,7 @@ public class CustomerView implements Serializable {
     @EJB
     private EmailSessionBean emailBean;
 
-    @Resource(lookup = "jms/factory")
+    @Resource(lookup = "jms/connectionFactory")
     private ConnectionFactory connectionFactory;
 
     @Resource(lookup = "jms/warehouse")
@@ -166,7 +166,7 @@ public class CustomerView implements Serializable {
     
     private void sendEmailToCustomer(Customer c){
         try {
-            emailBean.sendEmail(c.getEmail());
+            emailBean.sendEmail(c);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

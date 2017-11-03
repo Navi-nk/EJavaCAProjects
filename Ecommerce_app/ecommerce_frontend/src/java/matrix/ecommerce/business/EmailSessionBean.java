@@ -16,6 +16,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import matrix.ecommerce.model.Customer;
 
 /**
  *
@@ -28,24 +29,30 @@ public class EmailSessionBean {
     
     @Resource (lookup="mail/shoppingcart")
     private Session toGmail; 
+    private Customer toCustomer;
     
     
-    public void sendEmail(String email) throws Exception {
+    public void sendEmail(Customer c) throws Exception {
         
-        toGmail.setDebug(true);
-        System.out.println(">> after add");
-        Message message = new MimeMessage(toGmail);
-        message.setSubject("Hi This is a test message");
-        message.setRecipient(Message.RecipientType.TO , new InternetAddress(email,"Gautam"));
-        Multipart body = new MimeMultipart(); 
-        BodyPart part = new MimeBodyPart();
-        part.setText("Thank you for your order");
-        body.addBodyPart(part); 
-        message.setContent(body);
-        Transport transport = toGmail.getTransport();
-        transport.connect();
-        transport.sendMessage(message, message.getAllRecipients());
-        transport.close();
-        
+        try {
+            toCustomer = c;
+            toGmail.setDebug(true);
+            System.out.println(">> after add");
+            Message message = new MimeMessage(toGmail);
+            message.setSubject("Hi This is a test message");
+            message.setRecipient(Message.RecipientType.TO , new InternetAddress(toCustomer.getEmail(),"Gautam"));
+            Multipart body = new MimeMultipart(); 
+            BodyPart part = new MimeBodyPart();
+            part.setText("Thank you for your order");
+            body.addBodyPart(part); 
+            message.setContent(body);
+            Transport transport = toGmail.getTransport();
+            transport.connect();
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();      
+        } catch (Exception ex) {
+            
+            ex.printStackTrace();
+        }
     }
 }
