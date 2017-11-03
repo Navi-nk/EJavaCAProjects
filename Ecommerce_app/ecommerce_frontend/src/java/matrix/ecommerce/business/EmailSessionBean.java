@@ -57,12 +57,22 @@ public class EmailSessionBean {
             String sb = "<head>" +
                         "<style type=\"text/css\">" +
                         "  .blue { color: #00F; }" +
+                        "  table.GeneratedTable { width: 100%; background-color: #ffffff; border-collapse: collapse; border-width: 3px; border-color: #ffcc00; border-style: solid; color: #000000;}" +
+                        "  table.GeneratedTable td, table.GeneratedTable th { border-width: 3px; border-color: #ffcc00; border-style: solid; padding: 3px;}" +
+                        "  table.GeneratedTable thead { background-color: #ffcc00;}" +    
                         "</style>" +
                         "</head>" +
                         "<h2 class=\"blue\">" + "Order Summary for OrderNo " + newOrder.getId() + " dated " + newOrder.getCreatedDate() + "</h2>" +
                         "<p>" + "Dear <em>" + toCustomer.getName() + "</em>," + "</p>" +
                         "<p>Thanks for Shopping with us. Please find below a summary of your order.</p>" +
                         "<p>Your Order shall be dispatched shortly</p>" +
+                        "<table class=\"GeneratedTable\">" +
+                        "<tr align=\"center\">" + "Order Details" + "</tr>" +
+                        "<tr>" + "<p>Name: " + toCustomer.getName() + "</p>" +
+                                 "<p>Address: " + toCustomer.getAddress() + "</p>" +
+                                 "<p>Contact: " + toCustomer.getPhone() + "</p>" +
+                                 "<p>Email: " + toCustomer.getEmail() + "</p>" + "</tr>" +                         
+                        "</table>" +
                         "<p><strong>Thanks & Regards</strong></p>" +
                         "<p><strong>TeamMatrix@FruitMart</strong></p>";
             message.setContent(sb, "text/html; charset=utf-8");
