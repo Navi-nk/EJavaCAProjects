@@ -1,6 +1,4 @@
-
 package matrix.snapnshare.rest;
-
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -28,97 +26,99 @@ import matrix.snapshot.business.UserBean;
  *
  * @author Navi-PC
  */
-
 @RequestScoped
 @Path("/friends")
 public class Friends {
 
-    @EJB 
+    @EJB
     private UserBean userBean;
 
     @GET
     @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveFriends(@PathParam("username") String name) 
-    {   
-        
-        List<String> friends = new ArrayList<>(); 
-       // JsonObjectBuilder friendsBuilder=Json.createObjectBuilder();
-        JsonArrayBuilder jsonArray=Json.createArrayBuilder();
-try{
-        
-           if(name!=null)
-           {
-               friends= userBean.getFriends(name);
-               for(String friend:friends)
-               {
-                   jsonArray.add(friend);
-               }
-           }
-           
-        return  Response.ok(jsonArray.build()).build();
-}catch(Exception ex){
+    public Response retrieveFriends(@PathParam("username") String name) {
+
+        List<String> friends = new ArrayList<>();
+        // JsonObjectBuilder friendsBuilder=Json.createObjectBuilder();
+        JsonArrayBuilder jsonArray = Json.createArrayBuilder();
+        try {
+
+            if (name != null) {
+                friends = userBean.getFriends(name);
+                for (String friend : friends) {
+                    jsonArray.add(friend);
+                }
+            }
+
+            return Response.ok(jsonArray.build()).build();
+        } catch (Exception ex) {
             jsonArray.add("No friends found");
             return Response.status(Response.Status.FORBIDDEN).entity(jsonArray.build()).build();
         }
     }
-                    
-    
+
     @POST
     @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addFriend(@PathParam("username") String name, String userName) {
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
-        
+
         JsonReader jsonReader = Json.createReader(new StringReader(userName));
         JsonArray object = jsonReader.readArray();
         jsonReader.close();
-        
+
         List<String> friends = new ArrayList<>();
-        friends= userBean.getFriends(name);
-        int check = 0;
+        friends = userBean.getFriends(name);
+        
+        System.out.println(friends.size());
+        
+        Integer check = 0;
         String friendToInsert = null;
-        for (int i =0 ; i<object.size(); i++ ){
+        if(friends != null){
+        for (int i = 0; i < object.size(); i++) {
+            check = 0;
             String friendName = object.getString(i);
-            
-            for(String s : friends){
-                if(s.equals(friendName)){
+                System.out.println(friendName);
+            for (String s : friends) {
+                System.out.println(s);
+                if (s.equals(friendName)) {
+                    System.out.println("inside");
                     check = 1;
                     break;
                 }
             }
-            
-            if(check == 0){
+            System.out.println("check:"+check);
+            if (check == 0) {
                 friendToInsert = friendName;
                 break;
             }
         }
+        }
+        else
+            friendToInsert = object.getString(0);
         
-        try{
+        System.out.println(name + "-"+friendToInsert);
+
+        try {
             User user = userBean.findUser(name);
             User friendUser = userBean.findUser(friendToInsert);
-            if(friendUser != null){
-                userBean.addFriend(friendToInsert, user, friendUser); 
-                
-                
-                JsonArrayBuilder jsonArray=Json.createArrayBuilder();
-        
-         
-               friends= userBean.getFriends(name);
-               for(String friend:friends)
-               {
-                   jsonArray.add(friend);
-               }
-               return Response.ok(jsonArray.build()).build();
-            }
-            else{
+            if (friendUser != null) {
+                userBean.addFriend(friendToInsert, user, friendUser);
+
+                JsonArrayBuilder jsonArray = Json.createArrayBuilder();
+
+                friends = userBean.getFriends(name);
+                for (String friend : friends) {
+                    jsonArray.add(friend);
+                }
+                return Response.ok(jsonArray.build()).build();
+            } else {
                 System.out.println(name + "+" + userName);
                 arrBuilder.add("user not found");
                 return Response.status(Response.Status.NOT_FOUND).entity(arrBuilder.build()).build();
             }
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             arrBuilder.add("Friend already added");
             return Response.status(Response.Status.FORBIDDEN).entity(arrBuilder.build()).build();
         }
