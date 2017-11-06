@@ -31,6 +31,7 @@ public class Timeline {
        if(name!=null)
            {
                List<Image> imageList= timeLineBean.getImages(name);
+               if(imageList!=null){
                for(Image image:imageList)
                {
                    JsonObjectBuilder imageBuilder=Json.createObjectBuilder();
@@ -40,11 +41,14 @@ public class Timeline {
                    imageBuilder.add("postTime", image.getCraetedDate().toString());
                    jsonArray.add(imageBuilder);
                }
+               return  Response.ok(jsonArray.build()).build();
+               }
            }
-           
-        return  Response.ok(jsonArray.build()).build();
+           jsonArray.add("No images found");
+        return Response.status(Response.Status.FORBIDDEN).entity(jsonArray.build()).build();
     
     
     }
     
 }
+
