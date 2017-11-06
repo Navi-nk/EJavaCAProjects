@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `sns`.`image` (
   `image_id` INT(11) NOT NULL AUTO_INCREMENT,
   `image_name` VARCHAR(45) NOT NULL,
   `created_date` DATETIME NOT NULL,
-  `image_url` VARCHAR(45) NOT NULL,
+  `image_url` VARCHAR(300) NOT NULL,
   `comments` VARCHAR(200) NULL DEFAULT NULL,
   `user_name` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`image_id`),
