@@ -38,7 +38,7 @@ public class UserFriend implements Serializable {
     
     @JoinColumn(name = "friend", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
-    private User friend;
+    private User userFriend;
     
      public Integer getFriendId() {
         return friendId;
@@ -54,13 +54,13 @@ public class UserFriend implements Serializable {
         this.user = user;
     }
 
-    public User getFriend() {
-        return friend;
+    public User getUserFriend() {
+        return userFriend;
     }
-    public void setFriend(User friend) {
-        this.friend = friend;
+    public void setUserFriend(User userFriend) {
+        this.userFriend = userFriend;
     }
-    
+
 
     @Override
     public int hashCode() {
