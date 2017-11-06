@@ -27,15 +27,15 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Basic(optional = false)
     @Column(name = "user_name")
-    private Integer userName;
+    private String userName;
     
    
   
     
-    public Integer getUserName() {
+    public String getUserName() {
         return userName;
     }
-    public void setUserName(Integer userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
     
