@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "user_friend")
 @NamedQueries({
-     @NamedQuery(name = "UserFriend.findById", query = "SELECT friends FROM UserFriend friends WHERE friends.user = :user")
+     @NamedQuery(name = "UserFriend.findByName", query = "SELECT friends FROM UserFriend friends WHERE friends.user = :user")
     })
 public class UserFriend implements Serializable {
 
