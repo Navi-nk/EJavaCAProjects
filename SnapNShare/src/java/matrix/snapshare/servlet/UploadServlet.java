@@ -5,18 +5,25 @@
  */
 package matrix.snapshare.servlet;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author Gautam
  */
 
+@MultipartConfig
 public class UploadServlet extends HttpServlet {
 
     /**
@@ -30,10 +37,21 @@ public class UploadServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        PrintWriter out = response.getWriter();   
+        
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try {
             
-            String url = getUserNameFromRequest(request);
+            
+            String userName = getUserNameFromRequest(request);
+            Part p1 = request.getPart("file");
+            InputStream is = p1.getInputStream();
+        
+            String filePath = getServletContext().getInitParameter("file-upload");  // get path on the server
+            FileOutputStream os = new FileOutputStream (filePath);
+     
+       
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -42,9 +60,15 @@ public class UploadServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet UploadServlet at !" + request.getContextPath() + "</h1>");
-            out.println("<h1>Request Username : " + url + "</h1>");
+            out.println("<h1>Request Username : " + userName + "</h1>");
             out.println("</body>");
             out.println("</html>");
+        }
+        catch(Exception ex) {
+           out.println("Exception -->" + ex.getMessage());
+        }
+        finally { 
+           out.close();
         }
     }
     
@@ -60,6 +84,22 @@ public class UploadServlet extends HttpServlet {
         //return requestURL.append('?').append(queryString).toString();
         return info;
     }
+    
+    private byte[] readPart(Part p) throws IOException 
+    { 
+        byte[] buffer = new byte[1024 * 8];
+        int sz = 0; try (InputStream is = p.getInputStream()) 
+        { 
+            BufferedInputStream bis = new BufferedInputStream(is);
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) 
+            {
+                while (-1 != (sz = bis.read(buffer))) baos.write(buffer, 0, sz);
+                buffer = baos.toByteArray();
+            }
+        } 
+        return (buffer);
+    }
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
