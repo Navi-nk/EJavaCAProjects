@@ -49,12 +49,11 @@ public class Friends {
         
            if(name!=null)
            {
-             //  friends= userBean.getFriends(name);
+               friends= userBean.getFriends(name);
                for(String friend:friends)
                {
                    jsonArray.add(friend);
                }
-              // friendsBuilder.add("friends", builder);
            }
            
         return  Response.ok(jsonArray.build()).build();
@@ -78,7 +77,18 @@ public class Friends {
             User user = userBean.findUser(name);
             User friendUser = userBean.findUser(friendName);
             if(friendUser != null){
-                userBean.addFriend(friendName, user, friendUser);    
+                userBean.addFriend(friendName, user, friendUser); 
+                
+                List<String> friends = new ArrayList<>();
+                JsonArrayBuilder jsonArray=Json.createArrayBuilder();
+        
+         
+               friends= userBean.getFriends(name);
+               for(String friend:friends)
+               {
+                   jsonArray.add(friend);
+               }
+               return Response.ok(jsonArray.build()).build();
             }
             else{
                 System.out.println(name + "+" + userName);
@@ -90,6 +100,5 @@ public class Friends {
             arrBuilder.add("Friend already added");
             return Response.status(Response.Status.FORBIDDEN).entity(arrBuilder.build()).build();
         }
-       return null;
     }
 }

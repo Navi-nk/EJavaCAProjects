@@ -33,8 +33,7 @@ public class RegisterUser {
         }
         catch(Exception ex){
             ex.printStackTrace();
-            return (Response.status(Response.Status.FORBIDDEN).entity(arrBuilder.add("user exists").build()).build());
-            
+            return (Response.status(Response.Status.FORBIDDEN).entity(arrBuilder.add("user exists").build()).build());   
         }
     }
 }
