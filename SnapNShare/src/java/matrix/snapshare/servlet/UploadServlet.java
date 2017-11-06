@@ -11,6 +11,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -38,34 +44,40 @@ public class UploadServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        PrintWriter out = response.getWriter();   
+        PrintWriter out = response.getWriter(); 
+        
+        ServletContext context = getServletContext();
+        
+        System.out.println("Inside Servlet");
         
         response.setContentType("text/html;charset=UTF-8");
         try {
-            
-            
+                     
             String userName = getUserNameFromRequest(request);
-            Part p1 = request.getPart("file");
-            InputStream is = p1.getInputStream();
-        
-            String filePath = getServletContext().getInitParameter("file-upload");  // get path on the server
+            String userComment = new String(readPart(request.getPart("comment")));
+            byte[] file = readPart(request.getPart("image"));
+            
+            System.out.println("UserName retrieved:"+userName);
+            System.out.println("The comment is:" +userComment);
+
+            String filePath = context.getRealPath("/../../web/resources/images"); // get path on the server  
+            DateFormat dateFormat = new SimpleDateFormat("yy_MM_dd_HH-mm-ss");
+            Date date = new Date();
+            filePath = filePath.concat("/"+userName+dateFormat.format(date)+".jpg");
+            
+            System.out.println("UserName: "+userName);
+            System.out.println("Comments: "+userComment);
+            System.out.println("File Path: "+filePath);
+            
             FileOutputStream os = new FileOutputStream (filePath);
-     
-       
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UploadServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet UploadServlet at !" + request.getContextPath() + "</h1>");
-            out.println("<h1>Request Username : " + userName + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            os.write(file);
+            out.append("File Uploaded Successfully");
+            os.close();
+            
         }
         catch(Exception ex) {
-           out.println("Exception -->" + ex.getMessage());
+           out.append("Exception -->" + ex.getMessage());
+           System.out.println("Exception:" + ex.getMessage());
         }
         finally { 
            out.close();
