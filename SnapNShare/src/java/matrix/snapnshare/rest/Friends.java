@@ -71,7 +71,7 @@ public class Friends {
         List<String> friends = new ArrayList<>();
         friends = userBean.getFriends(name);
         
-        System.out.println(friends.size());
+//        System.out.println(friends.size());
         
         Integer check = 0;
         String friendToInsert = null;
@@ -79,16 +79,16 @@ public class Friends {
         for (int i = 0; i < object.size(); i++) {
             check = 0;
             String friendName = object.getString(i);
-                System.out.println(friendName);
+                //System.out.println(friendName);
             for (String s : friends) {
-                System.out.println(s);
+                //System.out.println(s);
                 if (s.equals(friendName)) {
-                    System.out.println("inside");
+                    //System.out.println("inside");
                     check = 1;
                     break;
                 }
             }
-            System.out.println("check:"+check);
+            //System.out.println("check:"+check);
             if (check == 0) {
                 friendToInsert = friendName;
                 break;
@@ -98,7 +98,7 @@ public class Friends {
         else
             friendToInsert = object.getString(0);
         
-        System.out.println(name + "-"+friendToInsert);
+        //System.out.println(name + "-"+friendToInsert);
 
         try {
             User user = userBean.findUser(name);
@@ -114,7 +114,7 @@ public class Friends {
                 }
                 return Response.ok(jsonArray.build()).build();
             } else {
-                System.out.println(name + "+" + userName);
+                //System.out.println(name + "+" + userName);
                 arrBuilder.add("user not found");
                 return Response.status(Response.Status.NOT_FOUND).entity(arrBuilder.build()).build();
             }
