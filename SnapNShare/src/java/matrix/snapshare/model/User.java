@@ -50,6 +50,9 @@ public class User implements Serializable {
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Collection<UserFriend> userFriendsCollection;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Collection<Image> imageCollection;
 
 
     @XmlTransient
@@ -60,6 +63,16 @@ public class User implements Serializable {
     public void setUserFriendsCollection(Collection<UserFriend> userFriendsCollection) {
         this.userFriendsCollection = userFriendsCollection;
     }
+    
+    @XmlTransient
+    public Collection<Image> getImageCollection() {
+        return imageCollection;
+    }
+
+    public void setImageCollection(Collection<Image> imageCollection) {
+        this.imageCollection = imageCollection;
+    }
+
 
     @Override
     public int hashCode() {
