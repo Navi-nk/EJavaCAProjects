@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
@@ -19,6 +21,9 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "user")
+@NamedQueries({
+     @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.name = :name")
+    })
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,7 +36,7 @@ public class User implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "user_name")
-    private Integer userName;
+    private String userName;
     
    
     public Integer getUserId() {
@@ -41,10 +46,10 @@ public class User implements Serializable {
         this.userId = userId;
     }
     
-    public Integer getUserName() {
+    public String getUserName() {
         return userName;
     }
-    public void setUserName(Integer userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
     
