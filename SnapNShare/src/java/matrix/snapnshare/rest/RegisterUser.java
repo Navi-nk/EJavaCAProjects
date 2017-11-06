@@ -15,7 +15,12 @@ public class RegisterUser {
     
     @POST
     public void resgister(@PathParam("username") String name) {
-    
-    
+        
+        
+      /*  try{
+        }
+        catch(Exception){
+            
+        }*/
     }
 }
