@@ -38,4 +38,9 @@ public class TimeLineBean {
         return list;
          
     }
+     
+     public void add(Image i){
+         em.persist(i);
+     }
+     
 }

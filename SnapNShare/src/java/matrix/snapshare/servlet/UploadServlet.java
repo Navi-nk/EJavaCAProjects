@@ -11,11 +11,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.UUID;
+import javax.ejb.EJB;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -23,6 +32,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import matrix.snapshare.model.Image;
+import static matrix.snapshare.model.Image_.user;
+import matrix.snapshare.model.User;
+import matrix.snapshot.business.TimeLineBean;
+import matrix.snapshot.business.UserBean;
 
 /**
  *
@@ -31,7 +45,10 @@ import javax.servlet.http.Part;
 
 @MultipartConfig
 public class UploadServlet extends HttpServlet {
-
+        @EJB
+                TimeLineBean bean;
+        @EJB
+                UserBean uBean;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -56,16 +73,18 @@ public class UploadServlet extends HttpServlet {
             String userName = getUserNameFromRequest(request);
             String userComment = new String(readPart(request.getPart("comment")));
             byte[] file = readPart(request.getPart("image"));
-            
+            String imageName = (UUID.randomUUID()).toString();
+            imageName = imageName.substring(0, 7);
             System.out.println("UserName retrieved:"+userName);
             System.out.println("The comment is:" +userComment);
 
             String filePath = context.getRealPath("/../../web/resources/images"); // get path on the server  
             DateFormat dateFormat = new SimpleDateFormat("yy_MM_dd_HH-mm-ss");
             Date date = new Date();
-            filePath = filePath.concat("/"+userName+dateFormat.format(date)+".jpg");
+            imageName = imageName+dateFormat.format(date);
+            filePath = filePath.concat("/"+imageName+".jpg");
             
-            System.out.println("UserName: "+userName);
+            System.out.println("UserName: "+imageName);
             System.out.println("Comments: "+userComment);
             System.out.println("File Path: "+filePath);
             
@@ -73,6 +92,40 @@ public class UploadServlet extends HttpServlet {
             os.write(file);
             out.append("File Uploaded Successfully");
             os.close();
+            
+            Image i = new Image();
+            
+            
+            
+        Enumeration e = NetworkInterface.getNetworkInterfaces();
+        String ip="localhost";
+while(e.hasMoreElements())
+{
+    NetworkInterface n = (NetworkInterface) e.nextElement();
+    Enumeration ee = n.getInetAddresses();
+    while (ee.hasMoreElements())
+    {
+        InetAddress inet = (InetAddress) ee.nextElement();
+        System.out.println(inet.getHostAddress());
+        ip=inet.getHostAddress();
+    }
+}
+        String newurl = "http://"+ip+":8080/SnapNShare/resources/images/";
+        newurl=newurl+imageName;
+            User u = uBean.findUser(userName);
+            i.setComments(userComment);
+            i.setCraetedDate(date);
+            i.setName(imageName);
+            i.setImageUrl(imageName);
+            i.setUser(u);
+            
+            bean.add(i);
+            JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+            response.setStatus(HttpServletResponse.SC_CREATED);
+            response.setContentType("application/json");
+            jsonObject.add("imageName",imageName );
+            out.print( jsonObject);
+            out.flush();
             
         }
         catch(Exception ex) {
