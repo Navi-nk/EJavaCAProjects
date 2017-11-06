@@ -45,7 +45,7 @@ public class Friends {
         List<String> friends = new ArrayList<>(); 
        // JsonObjectBuilder friendsBuilder=Json.createObjectBuilder();
         JsonArrayBuilder jsonArray=Json.createArrayBuilder();
-
+try{
         
            if(name!=null)
            {
@@ -57,7 +57,10 @@ public class Friends {
            }
            
         return  Response.ok(jsonArray.build()).build();
-          
+}catch(Exception ex){
+            jsonArray.add("No friends found");
+            return Response.status(Response.Status.FORBIDDEN).entity(jsonArray.build()).build();
+        }
     }
                     
     
@@ -72,14 +75,33 @@ public class Friends {
         JsonArray object = jsonReader.readArray();
         jsonReader.close();
         
-        String friendName = object.getString(0);
+        List<String> friends = new ArrayList<>();
+        friends= userBean.getFriends(name);
+        int check = 0;
+        String friendToInsert = null;
+        for (int i =0 ; i<object.size(); i++ ){
+            String friendName = object.getString(i);
+            
+            for(String s : friends){
+                if(s.equals(friendName)){
+                    check = 1;
+                    break;
+                }
+            }
+            
+            if(check == 0){
+                friendToInsert = friendName;
+                break;
+            }
+        }
+        
         try{
             User user = userBean.findUser(name);
-            User friendUser = userBean.findUser(friendName);
+            User friendUser = userBean.findUser(friendToInsert);
             if(friendUser != null){
-                userBean.addFriend(friendName, user, friendUser); 
+                userBean.addFriend(friendToInsert, user, friendUser); 
                 
-                List<String> friends = new ArrayList<>();
+                
                 JsonArrayBuilder jsonArray=Json.createArrayBuilder();
         
          

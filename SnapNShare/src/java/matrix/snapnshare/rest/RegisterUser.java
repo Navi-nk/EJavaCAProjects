@@ -28,6 +28,7 @@ public class RegisterUser {
     public Response resgister(@PathParam("username") String name) {
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         try{
+            System.out.println(name);
             userBean.addUser(name);
             return (Response.ok(arrBuilder.add("success").build()).build());
         }
