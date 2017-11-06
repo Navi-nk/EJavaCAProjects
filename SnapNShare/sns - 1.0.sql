@@ -4,6 +4,9 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
+
+DROP SCHEMA IF EXISTS `sns` ;
+
 -- -----------------------------------------------------
 -- Schema mydb
 -- -----------------------------------------------------
@@ -53,7 +56,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sns`.`user_friend`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sns`.`user_friend` (
-  `friend_id` INT(11) NOT NULL,
+  `friend_id` INT(11) NOT NULL AUTO_INCREMENT,
   `user` VARCHAR(45) NULL DEFAULT NULL,
   `friend` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`friend_id`),
@@ -72,6 +75,7 @@ CREATE TABLE IF NOT EXISTS `sns`.`user_friend` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+CREATE UNIQUE INDEX `index1` ON `sns`.`user_friend` (`user`,`friend`); 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

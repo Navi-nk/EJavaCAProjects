@@ -17,7 +17,9 @@ public class Timeline {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public void retrieveFriends(@PathParam("username") String name) {
+    public void retrieveTimeLine(@PathParam("username") String name) {
+        
+        
     
     
     }

@@ -32,6 +32,7 @@ public class Image implements Serializable {
     private Integer imageId;
     
     @Basic(optional = false)
+    @Column(name = "image_name")
     private String name;
     
     @Basic(optional = false)

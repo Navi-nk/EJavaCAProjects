@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "user")
 @NamedQueries({
-     @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.name = :name")
+     @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.userName = :name")
     })
 public class User implements Serializable {
 
@@ -34,8 +34,6 @@ public class User implements Serializable {
     @Column(name = "user_name")
     private String userName;
     
-   
-  
     
     public String getUserName() {
         return userName;
@@ -44,7 +42,7 @@ public class User implements Serializable {
         this.userName = userName;
     }
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany( mappedBy = "user")
     private Collection<UserFriend> userFriendsCollection;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

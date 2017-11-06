@@ -34,11 +34,11 @@ public class UserFriend implements Serializable {
        
     @JoinColumn(name = "user", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
-    private User  user;
+    private User user;
     
     @JoinColumn(name = "friend", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
-    private User userFriend;
+    private User friend;
     
      public Integer getFriendId() {
         return friendId;
@@ -54,17 +54,12 @@ public class UserFriend implements Serializable {
         this.user = user;
     }
 
-    public User getUserFriend() {
-        return userFriend;
+    public User getFriend() {
+        return friend;
     }
-    public void setUserFriend(User userFriend) {
-        this.userFriend = userFriend;
+    public void setFriend(User friend) {
+        this.friend = friend;
     }
-    
-
-   
-    
-
     
 
     @Override

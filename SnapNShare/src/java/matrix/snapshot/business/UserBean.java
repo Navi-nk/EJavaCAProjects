@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import matrix.snapshare.model.User;
+import matrix.snapshare.model.UserFriend;
 
 /**
  *
@@ -23,25 +24,28 @@ public class UserBean {
             em.persist(u);     
     }
     
-    public boolean findUser(String name) {
+    public User findUser(String name) {
       
         TypedQuery<User> query =  em.createNamedQuery("User.findByName", User.class);
         query.setParameter("name", name);
         query.setMaxResults(1);
         List<User> list = query.getResultList();
         
-        if(list == null || list.isEmpty()) 
-            return false;
-        
-        return true;
-    
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
     }
     
-    public void addFriend(String name) 
+    public void addFriend(String name, User u, User friendUser) 
     {
         
+        UserFriend friend = new UserFriend();
+   
+        friend.setUser(u);
+        friend.setFriend(friendUser);
         
-            //em.persist();
+           em.persist(friend);
          
     }
     
