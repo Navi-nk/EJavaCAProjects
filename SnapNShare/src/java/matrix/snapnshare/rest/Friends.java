@@ -1,15 +1,18 @@
 
 package matrix.snapnshare.rest;
 
+
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.Consumes;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,6 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import matrix.snapshare.model.User;
+
 import matrix.snapshot.business.UserBean;
 
 /**
@@ -28,15 +32,35 @@ import matrix.snapshot.business.UserBean;
 @RequestScoped
 @Path("/friends")
 public class Friends {
+
     @EJB 
     private UserBean userBean;
+
     @GET
     @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void retrieveFriends(@PathParam("username") String name) {
-    
-        System.out.println(name);
+    public Response retrieveFriends(@PathParam("username") String name) 
+    {   
+        
+        List<String> friends = new ArrayList<>(); 
+       // JsonObjectBuilder friendsBuilder=Json.createObjectBuilder();
+        JsonArrayBuilder jsonArray=Json.createArrayBuilder();
+
+        
+           if(name!=null)
+           {
+             //  friends= userBean.getFriends(name);
+               for(String friend:friends)
+               {
+                   jsonArray.add(friend);
+               }
+              // friendsBuilder.add("friends", builder);
+           }
+           
+        return  Response.ok(jsonArray.build()).build();
+          
     }
+                    
     
     @POST
     @Path("{username}")
