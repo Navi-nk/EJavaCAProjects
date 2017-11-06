@@ -46,7 +46,7 @@ public class Image implements Serializable {
     @Column(name = "comments")
     private String comments;
     
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_name", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
     private User user;
 

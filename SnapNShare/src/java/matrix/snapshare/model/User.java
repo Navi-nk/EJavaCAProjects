@@ -24,22 +24,13 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "user_id")
-    private Integer userId;
-    
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Basic(optional = false)
     @Column(name = "user_name")
     private Integer userName;
     
    
-    public Integer getUserId() {
-        return userId;
-    }
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+  
     
     public Integer getUserName() {
         return userName;
@@ -77,7 +68,7 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (userId != null ? userId.hashCode() : 0);
+        hash += (userName != null ? userName.hashCode() : 0);
         return hash;
     }
 
@@ -88,7 +79,7 @@ public class User implements Serializable {
             return false;
         }
         User other = (User) object;
-        if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
+        if ((this.userName == null && other.userName != null) || (this.userName != null && !this.userName.equals(other.userName))) {
             return false;
         }
         return true;
@@ -96,7 +87,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "matrix.snapshare.model.User[ id=" + userId + " ]";
+        return "matrix.snapshare.model.User[ userName=" + userName + " ]";
     }
     
 }

@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -17,6 +19,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "user_friend")
+@NamedQueries({
+     @NamedQuery(name = "UserFriend.findById", query = "SELECT friends FROM UserFriend friends WHERE friends.user = :user")
+    })
 public class UserFriend implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,14 +32,21 @@ public class UserFriend implements Serializable {
     private Integer friendId;
     
        
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
     private User  user;
     
-    @JoinColumn(name = "user_friend_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "friend", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
     private User userFriend;
-
+    
+     public Integer getFriendId() {
+        return friendId;
+    }
+    public void setFriendId(Integer friendId) {
+        this.friendId = friendId;
+    }
+    
     public User getUser() {
         return user;
     }
@@ -50,13 +62,7 @@ public class UserFriend implements Serializable {
     }
     
 
-    public Integer getFriendId() {
-        return friendId;
-    }
-    public void setFriendId(Integer friendId) {
-        this.friendId = friendId;
-    }
-    
+   
     
 
     
