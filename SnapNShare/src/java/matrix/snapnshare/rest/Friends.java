@@ -19,13 +19,15 @@ import javax.ws.rs.core.MediaType;
 public class Friends {
     
     @GET
+    @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public void retrieveFriends(@PathParam("username") String name) {
     
-    
+        System.out.println(name);
     }
     
     @POST
+    @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public void addFriend(@PathParam("username") String name) {
     
