@@ -32,6 +32,8 @@ public class UploadServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            
+            String url = getUserNameFromRequest(request);
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -40,9 +42,23 @@ public class UploadServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet UploadServlet at !" + request.getContextPath() + "</h1>");
+            out.println("<h1>Request Username : " + url + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
+    }
+    
+    public static String getUserNameFromRequest(HttpServletRequest request)
+    {
+        StringBuffer requestURL = request.getRequestURL();
+        String info = request.getPathInfo();
+        info = info.replace("/", "");
+        
+        if (info == null)
+            return "NULL";
+
+        //return requestURL.append('?').append(queryString).toString();
+        return info;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

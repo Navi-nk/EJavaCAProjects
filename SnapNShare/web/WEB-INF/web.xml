@@ -19,7 +19,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
-        <url-pattern>/timeline</url-pattern>
+        <url-pattern>/timeline/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
