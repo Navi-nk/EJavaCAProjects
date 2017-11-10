@@ -66,7 +66,7 @@ public class UserBean {
         
         List<UserFriend> list = query1.getResultList();
         if (list == null || list.isEmpty()) {
-         return null;
+         return friends;
         }
         else
         {

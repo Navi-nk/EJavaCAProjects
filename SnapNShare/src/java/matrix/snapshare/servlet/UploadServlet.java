@@ -11,20 +11,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.math.BigInteger;
 import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.UUID;
 import javax.ejb.EJB;
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -34,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import matrix.snapshare.model.Image;
-import static matrix.snapshare.model.Image_.user;
 import matrix.snapshare.model.User;
 import matrix.snapshot.business.TimeLineBean;
 import matrix.snapshot.business.UserBean;
@@ -69,7 +61,7 @@ public class UploadServlet extends HttpServlet {
 
         System.out.println("Inside Servlet");
 
-        response.setContentType("text/html;charset=UTF-8");
+        //response.setContentType("text/html;charset=UTF-8");
         try {
 
             String userName = getUserNameFromRequest(request);
@@ -80,10 +72,13 @@ public class UploadServlet extends HttpServlet {
             System.out.println("UserName retrieved:" + userName);
             System.out.println("The comment is:" + userComment);
 
-            String filePath = context.getRealPath("/../../web/resources/images"); // get path on the server  
+            //String filePath = context.getRealPath("/../../web/resources/images"); // get path on the server  
+            String filePath = context.getRealPath("/../../imagestore"); // get path on the server
             DateFormat dateFormat = new SimpleDateFormat("yy_MM_dd_HH-mm-ss");
             Date date = new Date();
-            imageName = imageName + dateFormat.format(date)+".jpg";
+            String newDate = dateFormat.format(date);
+            System.out.println(date);
+            imageName = imageName + newDate+".jpg";
             filePath = filePath.concat("/" + imageName );
 
             System.out.println("UserName: " + imageName);
@@ -92,7 +87,7 @@ public class UploadServlet extends HttpServlet {
 
             FileOutputStream os = new FileOutputStream(filePath);
             os.write(file);
-            out.append("File Uploaded Successfully");
+            //out.append("File Uploaded Successfully");
             os.close();
 
             Image i = new Image();
@@ -100,12 +95,15 @@ public class UploadServlet extends HttpServlet {
            
             String ip = Inet4Address.getLocalHost().getHostAddress();
             
-            String newurl = "http://" + ip + ":8080/SnapNShare/resources/images/";
+            //String newurl = "http://" + ip + ":8080/SnapNShare/resources/images/";
+            String newurl = "http://" + ip + ":8080/SnapNShare/api/imagestore/";
             newurl = newurl + imageName;
             
             User u = uBean.findUser(userName);
             i.setComments(userComment);
-            i.setCraetedDate(date);
+            
+            i.setCraetedDate(new java.sql.Timestamp(System.currentTimeMillis()));
+            System.out.println(i.getCraetedDate());
             i.setName(imageName);
             i.setImageUrl(newurl);
             i.setUser(u);
@@ -114,12 +112,16 @@ public class UploadServlet extends HttpServlet {
             JsonObjectBuilder jsonObject = Json.createObjectBuilder();
             response.setStatus(HttpServletResponse.SC_CREATED);
             response.setContentType("application/json");
+            
+            System.out.println("t "+imageName);
             jsonObject.add("imageName", imageName);
-            out.print(jsonObject);
-            out.flush();
+            //System.out.println("t "+jsonObject.build().toString());
+            out.print(jsonObject.build());
+            
+            //out.flush();
 
         } catch (Exception ex) {
-            out.append("Exception -->" + ex.getMessage());
+            //out.append("Exception -->" + ex.getMessage());
             System.out.println("Exception:" + ex.getMessage());
         } finally {
             out.close();

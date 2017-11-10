@@ -1,11 +1,13 @@
 package matrix.snapnshare.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -44,7 +46,7 @@ public class Timeline {
                return  Response.ok(jsonArray.build()).build();
                }
            }
-           jsonArray.add("No images found");
+           //jsonArray.add("");
         return Response.status(Response.Status.FORBIDDEN).entity(jsonArray.build()).build();
     
     

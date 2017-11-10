@@ -6,7 +6,9 @@
 package matrix.snapshare.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +18,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -37,8 +41,8 @@ public class Image implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "created_date")
-    private Date craetedDate;
-    
+    private Timestamp craetedDate;
+     
     @Basic(optional = false)
     @Column(name = "image_url")
     private String imageUrl;
@@ -65,12 +69,11 @@ public class Image implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    
 
-    public Date getCraetedDate() {
+    public Timestamp getCraetedDate() {
         return craetedDate;
     }
-    public void setCraetedDate(Date craetedDate) {
+    public void setCraetedDate(Timestamp craetedDate) {
         this.craetedDate = craetedDate;
     }
 

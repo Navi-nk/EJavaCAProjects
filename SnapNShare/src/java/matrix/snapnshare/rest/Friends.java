@@ -2,7 +2,9 @@ package matrix.snapnshare.rest;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.json.Json;
@@ -70,10 +72,22 @@ public class Friends {
 
         List<String> friends = new ArrayList<>();
         friends = userBean.getFriends(name);
-        
+
+        HashMap<String, Integer> check = new HashMap<>();
+
+        for (int i = 0; i < object.size(); i++) {
+            check.put(object.getString(i), 0);
+        }
+
+       
+        for (String s : friends) {
+            if (check.containsKey(s)) {
+                check.put(s, 1);
+            }
+        }
 //        System.out.println(friends.size());
-        
-        Integer check = 0;
+
+        /*    Integer check = 0;
         String friendToInsert = null;
         if(friends != null){
         for (int i = 0; i < object.size(); i++) {
@@ -96,31 +110,34 @@ public class Friends {
         }
         }
         else
-            friendToInsert = object.getString(0);
-        
+            friendToInsert = object.getString(0);*/
         //System.out.println(name + "-"+friendToInsert);
-
         try {
             User user = userBean.findUser(name);
-            User friendUser = userBean.findUser(friendToInsert);
-            if (friendUser != null) {
-                userBean.addFriend(friendToInsert, user, friendUser);
-
-                JsonArrayBuilder jsonArray = Json.createArrayBuilder();
-
-                friends = userBean.getFriends(name);
-                for (String friend : friends) {
-                    jsonArray.add(friend);
+            for (Map.Entry<String, Integer> e : check.entrySet()) {
+                if (0 == e.getValue()) {
+                    String friendToInsert = e.getKey();
+                    User friendUser = userBean.findUser(friendToInsert);
+                    if (friendUser != null) {
+                        userBean.addFriend(friendToInsert, user, friendUser);
+                    } else {
+                        //System.out.println(name + "+" + userName);
+                        arrBuilder.add("user not found");
+                        return Response.status(Response.Status.NOT_FOUND).entity(arrBuilder.build()).build();
+                    }
                 }
-                return Response.ok(jsonArray.build()).build();
-            } else {
-                //System.out.println(name + "+" + userName);
-                arrBuilder.add("user not found");
-                return Response.status(Response.Status.NOT_FOUND).entity(arrBuilder.build()).build();
             }
         } catch (Exception ex) {
             arrBuilder.add("Friend already added");
             return Response.status(Response.Status.FORBIDDEN).entity(arrBuilder.build()).build();
         }
+        
+        JsonArrayBuilder jsonArray = Json.createArrayBuilder();
+
+                        friends = userBean.getFriends(name);
+                        for (String friend : friends) {
+                            jsonArray.add(friend);
+                        }
+                        return Response.ok(jsonArray.build()).build();
     }
 }
